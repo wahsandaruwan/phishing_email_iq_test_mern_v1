@@ -9,7 +9,7 @@ import Table from "../components/Table";
 
 const Dashboard = () => {    
     // Display different admin component
-    const [display, setDisplay] = useState("allTest")
+    const [display, setDisplay] = useState("summary")
     // Update the state
     const updateState = (newState) => {
         setDisplay(newState)
