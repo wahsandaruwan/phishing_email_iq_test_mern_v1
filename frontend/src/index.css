@@ -261,3 +261,45 @@ h2{
     width: 100%;
 }
 
+/* -----Summary componenet----- */
+.summary{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 90px 20px;
+}
+
+/* Box */
+.summary .box{
+    max-width: 300px;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    background-color: #d42e2e;
+    margin: 0 20px;
+    border-radius: 10px;
+}
+
+/* Icon */
+.summary .box .icon{
+    font-size: 3rem;
+}
+
+/* Title */
+.summary .box .title-bx{
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+/* Value */
+.summary .box .val{
+    font-size: 1.2rem;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+
+
