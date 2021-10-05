@@ -114,6 +114,27 @@ h2{
     background-color: #d42e2e;
 }
 
+/* -----Common table----- */
+table{
+    width: 100%;
+}
+
+table, 
+th, 
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th,
+td{
+    padding: 10px;
+}
+
+th{
+    background-color: #d42e2e;
+}
+
 /* -------Home page------- */
 
 /* -----Hero----- */
@@ -299,6 +320,30 @@ h2{
     background-color: #fff;
     padding: 10px;
     border-radius: 8px;
+}
+
+/* -----All tests component----- */
+.all-tests{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 90px 20px;
+}
+
+/* Heading */
+.all-tests h3{
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.all-tests .tbl-div{
+    max-width: 800px;
+    width: 100%;
+    max-height: 700px;
+    overflow-y: scroll;
 }
 
 

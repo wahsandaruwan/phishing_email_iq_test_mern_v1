@@ -5,10 +5,11 @@ import Test from "../components/Test"
 // Hooks
 import { useState } from "react"
 import Summary from "../components/Summary";
+import Table from "../components/Table";
 
-const Dashboard = () => {
+const Dashboard = () => {    
     // Display different admin component
-    const [display, setDisplay] = useState("summary")
+    const [display, setDisplay] = useState("allTest")
     // Update the state
     const updateState = (newState) => {
         setDisplay(newState)
@@ -17,6 +18,7 @@ const Dashboard = () => {
         <>
             <Navbar updateState={updateState} currState={display}/>
             {display === "summary" && <Summary/>}
+            {display === "allTest" && <Table/>}
             {display === "newTest" && <Test/>}
         </>
     )
