@@ -16,6 +16,7 @@ const Dashboard = () => {
     return (
         <>
             <Navbar updateState={updateState} currState={display}/>
+            {display === "newTest" && <Test/>}
         </>
     )
 }
