@@ -28,11 +28,12 @@ const Table = () => {
                                 {
                                     data.map((obj) => {
                                         // Destructure
-                                        const {Tid, Time, Date, Marks, Recommendations} = obj
+                                        const {Tid, Time, Duration, Date, Marks, Recommendations} = obj
                                         return(
                                             <tr key={Tid}>
                                                 <td>{Tid}</td>
                                                 <td>{Time}</td>
+                                                <td>{Duration}</td>
                                                 <td>{Date}</td>
                                                 <td>{Marks}</td>
                                                 <td>{Recommendations}</td>
