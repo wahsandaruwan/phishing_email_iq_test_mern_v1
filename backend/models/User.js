@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Enter an user type!'],
         enum: {
-            values: ['admin', 'general'],
-            message: 'Enter either admin or general as user type!'
+            values: ['admin', 'normal'],
+            message: 'Enter either admin or normal as user type!'
         }
     },
     email: {
