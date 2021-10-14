@@ -65,7 +65,7 @@ exports.deleteQuiz = async (req, res) => {
     const {quizId} = req.params
 
     try{
-        await Quiz.deleteOne({_id: quizId})
+        await Quiz.findByIdAndDelete(quizId)
         res.status(200).json({success: {message: "Quiz successfully deleted!"}})
     }catch(err){
         res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
