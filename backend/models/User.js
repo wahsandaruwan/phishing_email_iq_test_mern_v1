@@ -37,7 +37,7 @@ function validateEmail(email){
     return regEx.test(email)
 }
 
-// Custome name validation
+// Custom name validation
 function validateName(name){
     const regEx = /^[a-zA-Z\s]+$/
     return regEx.test(name)
