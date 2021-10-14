@@ -1,5 +1,7 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv/config')
 
 exports.userRegistration = async (req, res) => {
     const {firstName, lastName, email, password} = req.body
@@ -17,7 +19,9 @@ exports.userRegistration = async (req, res) => {
     const newUser = new User({firstName, lastName, email, password: hashPass})
     try{
         await newUser.save()
-        res.status(200).json({success: {message: 'User successfully registered!'}})
+        // Get jwt
+        const token = getLoginRegToken(newUser)
+        res.status(200).json({success: token})
     }catch(err){
         res.status(403).json({error: {message: constructErr(err)}})
     }
@@ -38,8 +42,19 @@ exports.userLogin = async (req, res) => {
         console.log(user.password)
         return res.status(403).json({error: {message: 'Wrong password!'}})
     }
+    // Get jwt
+    const token = getLoginRegToken(user)
+    res.status(200).json({success: token})
+}
 
-    res.status(200).json({success: {message: 'User successfully logged in!'}})
+// Generate jwt
+function getLoginRegToken(user){
+    return jwt.sign({
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
+    }, process.env.SECRET_KEY, {expiresIn: '10m'})
 }
 
 // Construct array of db validation errors
