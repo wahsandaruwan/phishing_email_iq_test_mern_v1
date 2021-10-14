@@ -1,7 +1,11 @@
 const User = require('../models/User')
+const bcrypt = require('bcrypt')
 
 exports.userRegistration = async (req, res) => {
     const {firstName, lastName, email, password} = req.body
+
+    // Password hashing
+    const hashPass = password !== undefined ? await bcrypt.hash(password, 8) : undefined
 
     // Check if email already exist
     const user = await User.findOne({email})
@@ -10,7 +14,7 @@ exports.userRegistration = async (req, res) => {
     }
 
     // Create a new user
-    const newUser = new User({firstName, lastName, email, password})
+    const newUser = new User({firstName, lastName, email, password: hashPass})
     try{
         await newUser.save()
         res.status(200).json({error: {message: 'User successfully registered!'}})

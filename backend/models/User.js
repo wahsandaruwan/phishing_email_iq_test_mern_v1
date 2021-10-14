@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
 // Create user schema
 const userSchema = new mongoose.Schema({
@@ -42,5 +43,17 @@ function validateName(name){
     const regEx = /^[a-zA-Z\s]+$/
     return regEx.test(name)
 }
+
+// Pre middleware
+// userSchema.pre('save', async (next) => {
+//     try{
+//         const salt = 8
+//         const hashedPass = await bcrypt.hash(this.password, salt)
+//         this.password = hashedPass
+//         next()
+//     }catch(err){
+//         next(err)
+//     }
+// })
 
 module.exports = mongoose.model('User', userSchema)
