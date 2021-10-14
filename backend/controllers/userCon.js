@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv/config')
 
+// User registration
 exports.userRegistration = async (req, res) => {
     const {firstName, lastName, userType, email, password} = req.body
 
@@ -26,6 +27,7 @@ exports.userRegistration = async (req, res) => {
     }
 }
 
+// User login
 exports.userLogin = async (req, res) => {
     const {email, password} = req.body
 
