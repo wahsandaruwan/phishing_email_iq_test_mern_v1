@@ -48,14 +48,13 @@ exports.updateQuiz = async (req, res) => {
 
     // Check if quiz title already exist
     const quiz = await Quiz.findOne({title: req.body.title})
-
     if(quiz){
         return res.status(403).json({error: {message: "Quiz title already exist!"}})
     }
 
     try{
         await Quiz.findByIdAndUpdate(quizId, req.body)
-        res.status(200).json({success: {message: "Quiz uccessfully updated!"}})
+        res.status(200).json({success: {message: "Quiz successfully updated!"}})
     }catch(err){
         res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
@@ -63,7 +62,14 @@ exports.updateQuiz = async (req, res) => {
 
 // Delete quiz
 exports.deleteQuiz = async (req, res) => {
-    
+    const {quizId} = req.params
+
+    try{
+        await Quiz.deleteOne({_id: quizId})
+        res.status(200).json({success: {message: "Quiz successfully deleted!"}})
+    }catch(err){
+        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+    }
 }
 
 // Get quizes by searching
