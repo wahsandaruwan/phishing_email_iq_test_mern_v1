@@ -58,6 +58,18 @@ exports.getAllUsers = async (req, res) => {
     }
 }
 
+// Get user by id
+exports.getUserById = async (req, res) => {
+    const {userId} = req.params
+
+    try{
+        const user = await User.findById(userId)
+        res.status(200).json(user)
+    }catch(err){
+        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+    }
+}
+
 // Generate jwt
 function getLoginRegToken(user){
     return jwt.sign({
