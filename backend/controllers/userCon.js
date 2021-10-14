@@ -12,7 +12,7 @@ exports.userRegistration = async (req, res) => {
     // Check if email already exist
     const user = await User.findOne({email})
     if(user){
-        return res.status(403).json({error: {message: 'Email already exist!'}})
+        return res.status(403).json({error: {message: "Email already exist!"}})
     }
 
     // Create a new user
@@ -33,14 +33,14 @@ exports.userLogin = async (req, res) => {
     // Check if email matches
     const user = await User.findOne({email})
     if(!user){
-        return res.status(403).json({error: {message: 'Wrong email address!'}})
+        return res.status(403).json({error: {message: "Wrong email address!"}})
     }
 
     // Check if password matches
     const passOk = await bcrypt.compare(password, user.password)
     if(!passOk){
         console.log(user.password)
-        return res.status(403).json({error: {message: 'Wrong password!'}})
+        return res.status(403).json({error: {message: "Wrong password!"}})
     }
     // Get jwt
     const token = getLoginRegToken(user)
