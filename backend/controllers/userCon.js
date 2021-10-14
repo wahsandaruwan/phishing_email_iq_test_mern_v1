@@ -48,6 +48,16 @@ exports.userLogin = async (req, res) => {
     res.status(200).json({success: token})
 }
 
+// Get all quizes
+exports.getAllUsers = async (req, res) => {
+    try{
+        const users = await User.find()
+        res.status(200).json(users)
+    }catch(err){
+        res.status(403).json({errors: {message: err.message}})
+    }
+}
+
 // Generate jwt
 function getLoginRegToken(user){
     return jwt.sign({
