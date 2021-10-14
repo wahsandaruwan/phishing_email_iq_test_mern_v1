@@ -14,11 +14,7 @@ exports.authUser = (req, res, next) => {
                 return res.status(404).json({error: {message: "Invalid or expired token!"}})
             }
         }
-        else{
-            return res.status(403).json({error: {message: "Authorization token must be Bearer [token]"}})
-        }
+        return res.status(403).json({error: {message: "Authorization token must be Bearer [token]"}})
     }
-    else{
-        return res.status(403).json({error: {message: "Authorization header must be provided!"}})
-    }
+    return res.status(403).json({error: {message: "Authorization header must be provided!"}})
 }

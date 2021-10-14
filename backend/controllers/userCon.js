@@ -4,10 +4,11 @@ const jwt = require('jsonwebtoken')
 require('dotenv/config')
 
 exports.userRegistration = async (req, res) => {
-    const {firstName, lastName, email, password} = req.body
+    const {firstName, lastName, userType, email, password} = req.body
 
     // Password hashing
-    const hashPass = password !== undefined ? await bcrypt.hash(password, 8) : undefined
+    console.log(password)
+    const hashPass = await bcrypt.hash(password, 8)
 
     // Check if email already exist
     const user = await User.findOne({email})
@@ -16,14 +17,12 @@ exports.userRegistration = async (req, res) => {
     }
 
     // Create a new user
-    const newUser = new User({firstName, lastName, email, password: hashPass})
+    const newUser = new User({firstName, lastName, userType, email, password: password.length >= 6 ? hashPass : false})
     try{
         await newUser.save()
-        // Get jwt
-        const token = getLoginRegToken(newUser)
-        res.status(200).json({success: token})
+        res.status(200).json({success: {message: "Successfully created a new user!"}})
     }catch(err){
-        res.status(403).json({error: {message: constructErr(err)}})
+        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 
@@ -53,8 +52,9 @@ function getLoginRegToken(user){
         id: user._id,
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName
-    }, process.env.SECRET_KEY, {expiresIn: '1m'})
+        lastName: user.lastName,
+        userType: user.userType
+    }, process.env.SECRET_KEY, {expiresIn: '10m'})
 }
 
 // Construct array of db validation errors
