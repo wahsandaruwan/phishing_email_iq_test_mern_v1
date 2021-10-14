@@ -3,6 +3,7 @@ const app = express()
 const PORT = 3300
 require('./helpers/mongodb_init')
 const userRoutes = require('./routes/user')
+const {authUser} = require('./middlewares/auth')
 
 // Common middlewares
 app.use(express.json())
@@ -10,6 +11,12 @@ app.use(express.json())
 // Basic route
 app.get('/', (req, res) => {
     res.send("Welcome to phishing quiz!")
+})
+
+// For testing authorization
+app.use('/api/protected', authUser, (req, res) => {
+    console.log(authUser)
+    res.send(`Welcome ${req.user.firstName}`)
 })
 
 // User route middleware
