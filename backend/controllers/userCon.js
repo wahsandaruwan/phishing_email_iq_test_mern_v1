@@ -56,7 +56,7 @@ function getLoginRegToken(user){
         firstName: user.firstName,
         lastName: user.lastName,
         userType: user.userType
-    }, process.env.SECRET_KEY, {expiresIn: '10m'})
+    }, process.env.SECRET_KEY, {expiresIn: '1h'})
 }
 
 // Construct array of db validation errors

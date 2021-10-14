@@ -14,11 +14,17 @@ exports.getAllQuizes = async (req, res) => {
 exports.addQuiz = async (req, res) => {
     const {title, quizImage, quizAns} = req.body
 
+    // Check if quiz title already exist
+    const quiz = await Quiz.findOne({title})
+    if(quiz){
+        return res.status(403).json({error: {message: "Quiz title already exist!"}})
+    }
+
     // Create new quiz
-    const quiz = new Quiz({title, quizImage, quizAns})
+    const newQuiz = new Quiz({title, quizImage, quizAns})
     try{
-        const createdQuiz = await quiz.save()
-        res.status(200).json(createdQuiz)
+        const quiz = await newQuiz.save()
+        res.status(200).json(quiz)
     }catch(err){
         res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
