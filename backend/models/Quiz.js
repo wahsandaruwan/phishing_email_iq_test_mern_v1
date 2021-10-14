@@ -12,7 +12,7 @@ const quizSchema = new mongoose.Schema({
     },
     quizAns: {
         type: String,
-        required: [true, 'Enter an user type!'],
+        required: [true, 'Enter a quiz answer!'],
         enum: {
             values: ['legitimate', 'phishing'],
             message: 'Enter either legitimate or phishing as quiz answer!'

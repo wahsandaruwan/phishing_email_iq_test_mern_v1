@@ -19,3 +19,5 @@ router.delete('/:quizId', deleteQuiz)
 
 // Get quiz by search router
 router.get('/search/:query', getQuizBySearch)
+
+module.exports = router
