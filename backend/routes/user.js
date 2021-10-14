@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {userRegistration, userLogin, getAllUsers, getUserById, updateUser} = require('../controllers/userCon')
+const {userRegistration, userLogin, getAllUsers, getUserById, updateUser, deleteUser} = require('../controllers/userCon')
 const {authUser, authRole} = require('../middlewares/auth')
 
 // Register user router
@@ -18,8 +18,8 @@ router.get('/:userId', getUserById)
 // Update user by id router
 router.put('/:userId', updateUser)
 
-// // Delete user by id router
-// router.delete('/:userId', deleteUser)
+// Delete user by id router
+router.delete('/:userId', deleteUser)
 
 // // Get users by search router
 // router.get('/search/:query', getUserBySearch)

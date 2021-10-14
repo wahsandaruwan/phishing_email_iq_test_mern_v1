@@ -96,6 +96,18 @@ exports.updateUser = async (req, res) => {
     }
 }
 
+// Delete user
+exports.deleteUser = async (req, res) => {
+    const {userId} = req.params
+
+    try{
+        await User.findByIdAndDelete(userId)
+        res.status(200).json({success: {message: "User successfully deleted!"}})
+    }catch(err){
+        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+    }
+}
+
 // Generate jwt
 function getLoginRegToken(user){
     return jwt.sign({
