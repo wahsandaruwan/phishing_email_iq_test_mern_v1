@@ -4,6 +4,9 @@ const PORT = 3300
 require('./helpers/mongodb_init')
 const userRoutes = require('./routes/user')
 
+// Common middlewares
+app.use(express.json())
+
 // Basic route
 app.get('/', (req, res) => {
     res.send("Welcome to phishing quiz!")

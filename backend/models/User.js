@@ -5,14 +5,14 @@ const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: [true, 'Enter an first name!'],
-        minlength: [6, 'Minimum length of first name would be 6 characters'],
+        minlength: [4, 'Minimum length of first name would be 6 characters'],
         maxlength: [50, 'Maximum length of first name would be 50 characters'],
         validate: [validateName, 'Enter first name only using letters']
     },
     lastName: {
         type: String,
         required: [true, 'Enter an last name!'],
-        minlength: [6, 'Minimum length of last name would be 6 characters'],
+        minlength: [4, 'Minimum length of last name would be 6 characters'],
         maxlength: [50, 'Maximum length of last name would be 50 characters'],
         validate: [validateName, 'Enter last name only using letters']
     },

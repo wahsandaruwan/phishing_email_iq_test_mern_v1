@@ -3,12 +3,12 @@ const router = express.Router()
 
 // Register router
 router.post('/register', (req, res) => {
-    res.send('User Registration')
+    res.send(req.body)
 })
 
 // Login router
 router.post('/login', (req, res) => {
-    res.send('User Login')
+    res.send(req.body)
 })
 
 module.exports = router
