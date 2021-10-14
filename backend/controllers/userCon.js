@@ -129,12 +129,3 @@ function getLoginRegToken(user){
         userType: user.userType
     }, process.env.SECRET_KEY, {expiresIn: '1h'})
 }
-
-// Construct array of db validation errors
-function constructErr(err){
-    let arr = new Array()
-    Object.entries(err.errors).forEach((value, index) => {     
-        arr.push(value[1].message) 
-    })
-    return arr
-}
