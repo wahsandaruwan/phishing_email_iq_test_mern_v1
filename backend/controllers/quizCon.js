@@ -55,7 +55,7 @@ exports.updateQuiz = async (req, res) => {
     }
 
     try{
-        await Quiz.findByIdAndUpdate(quizId, req.body)
+        await Quiz.findOneAndUpdate({_id: quizId}, req.body, {new: true, runValidators: true})
         res.status(200).json({success: {message: "Quiz successfully updated!"}})
     }catch(err){
         res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
