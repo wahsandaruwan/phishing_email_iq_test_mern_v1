@@ -70,11 +70,10 @@ exports.getUserById = async (req, res) => {
     }
 }
 
-// Update quiz
+// Update user
 exports.updateUser = async (req, res) => {
     const {userId} = req.params
-
-    const {firstName, lastName, userType, email, password} = req.body
+    const {email, password} = req.body
 
     // Password hashing
     const hashPass = await bcrypt.hash(password, 8)
