@@ -70,6 +70,33 @@ exports.getUserById = async (req, res) => {
     }
 }
 
+// Update quiz
+exports.updateUser = async (req, res) => {
+    const {userId} = req.params
+
+    const {firstName, lastName, userType, email, password} = req.body
+
+    // Password hashing
+    const hashPass = await bcrypt.hash(password, 8)
+
+    // Check if email already exist
+    const user = await User.findOne({email})
+    if(user){
+        if(user.id !== userId){
+            return res.status(403).json({error: {message: "Email already exist!"}})
+        }
+    }
+
+    // Add hashed password
+    req.body.password = password.length >= 6 ? hashPass : false
+    try{
+        await User.findOneAndUpdate({_id: userId}, req.body, {new: true, runValidators: true})
+        res.status(200).json({success: {message: "User successfully updated!"}})
+    }catch(err){
+        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+    }
+}
+
 // Generate jwt
 function getLoginRegToken(user){
     return jwt.sign({
