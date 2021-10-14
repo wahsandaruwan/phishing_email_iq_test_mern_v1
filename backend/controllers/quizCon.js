@@ -32,7 +32,14 @@ exports.addQuiz = async (req, res) => {
 
 // Get quiz by id
 exports.getQuizById = async (req, res) => {
-    
+    const {quizId} = req.params
+
+    try{
+        const quiz = await Quiz.findById(quizId)
+        res.status(200).json(quiz)
+    }catch(err){
+        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+    }
 }
 
 // Get quizes by searching
