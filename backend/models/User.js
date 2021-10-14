@@ -32,13 +32,13 @@ const userSchema = new mongoose.Schema({
 })
 
 // Custom email validation
-const validateEmail = (email) => {
+function validateEmail(email){
     const regEx = /^[a-zA-Z\d\._-]+@[a-zA-Z\d_-]+\.[a-zA-Z\d\.]{2,}$/
     return regEx.test(email)
 }
 
 // Custome name validation
-const validateName = (name) => {
+function validateName(name){
     const regEx = /^[a-zA-Z\s]+$/
     return regEx.test(name)
 }
