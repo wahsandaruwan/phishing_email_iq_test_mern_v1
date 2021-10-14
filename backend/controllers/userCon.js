@@ -108,6 +108,17 @@ exports.deleteUser = async (req, res) => {
     }
 }
 
+// Get users by searching
+exports.getUserBySearch = async (req, res) => {
+    try{
+        const regexQuery = new RegExp(req.params.query, 'i')
+        const users = await User.find({$or: [{firstName: regexQuery}, {lastName: regexQuery}, {email: regexQuery}, {userType: regexQuery}]})
+        res.status(200).json(users)
+    }catch(err){
+        res.status(403).json({errors: {message: err.message}})
+    }
+}
+
 // Generate jwt
 function getLoginRegToken(user){
     return jwt.sign({
