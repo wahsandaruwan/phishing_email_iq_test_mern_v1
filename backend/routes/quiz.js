@@ -1,23 +1,24 @@
 const express = require('express')
 const router = express.Router()
 const {getAllQuizes, addQuiz, getQuizById, getQuizBySearch, updateQuiz, deleteQuiz} = require('../controllers/quizCon')
+const {authRole} = require('../middlewares/auth')
 
 // Get all quizes router
-router.get('/', getAllQuizes)
+router.get('/', authRole(['admin']), getAllQuizes)
 
 // Add quiz router
-router.post('/', addQuiz)
+router.post('/', authRole(['admin']), addQuiz)
 
 // Get quiz by id router
-router.get('/:quizId', getQuizById)
+router.get('/:quizId', authRole(['admin']), getQuizById)
 
 // Update quiz by id router
-router.put('/:quizId', updateQuiz)
+router.put('/:quizId', authRole(['admin']), updateQuiz)
 
 // Delete quiz by id router
-router.delete('/:quizId', deleteQuiz)
+router.delete('/:quizId', authRole(['admin']), deleteQuiz)
 
 // Get quiz by search router
-router.get('/search/:query', getQuizBySearch)
+router.get('/search/:query', authRole(['admin']), getQuizBySearch)
 
 module.exports = router

@@ -10,18 +10,18 @@ router.post('/register', authUser, authRole(['admin']), userRegistration)
 router.post('/login', userLogin)
 
 // Get all users router
-router.get('/', getAllUsers)
+router.get('/', authUser, authRole(['admin']), getAllUsers)
 
 // Get user by id router
-router.get('/:userId', getUserById)
+router.get('/:userId', authUser, authRole(['admin', 'normal']), getUserById)
 
 // Update user by id router
-router.put('/:userId', updateUser)
+router.put('/:userId', authUser, authRole(['admin', 'normal']), updateUser)
 
 // Delete user by id router
-router.delete('/:userId', deleteUser)
+router.delete('/:userId', authUser, authRole(['admin']), deleteUser)
 
 // Get users by search router
-router.get('/search/:query', getUserBySearch)
+router.get('/search/:query', authUser, authRole(['admin']), getUserBySearch)
 
 module.exports = router
