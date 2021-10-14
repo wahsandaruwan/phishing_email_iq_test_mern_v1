@@ -49,7 +49,9 @@ exports.updateQuiz = async (req, res) => {
     // Check if quiz title already exist
     const quiz = await Quiz.findOne({title: req.body.title})
     if(quiz){
-        return res.status(403).json({error: {message: "Quiz title already exist!"}})
+        if(quiz.id !== quizId){
+            return res.status(403).json({error: {message: "Quiz title already exist!"}})
+        }
     }
 
     try{
@@ -74,5 +76,11 @@ exports.deleteQuiz = async (req, res) => {
 
 // Get quizes by searching
 exports.getQuizBySearch = async (req, res) => {
-    
+    try{
+        const regexQuery = new RegExp(req.params.query, 'i')
+        const quizes = await Quiz.find({$or: [{title: regexQuery}, {quizAns: regexQuery}]})
+        res.status(200).json(quizes)
+    }catch(err){
+        res.status(403).json({errors: {message: err.message}})
+    }
 }
