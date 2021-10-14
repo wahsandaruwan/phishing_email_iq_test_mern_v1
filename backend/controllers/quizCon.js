@@ -12,7 +12,16 @@ exports.getAllQuizes = async (req, res) => {
 
 // Add a quiz
 exports.addQuiz = async (req, res) => {
-    
+    const {title, quizImage, quizAns} = req.body
+
+    // Create new quiz
+    const quiz = new Quiz({title, quizImage, quizAns})
+    try{
+        const createdQuiz = await quiz.save()
+        res.status(200).json(createdQuiz)
+    }catch(err){
+        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+    }
 }
 
 // Get quiz by id
