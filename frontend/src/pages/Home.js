@@ -3,7 +3,7 @@ import { useState } from "react"
 import InputBox from "../components/InputBox"
 import SubmitBtn from "../components/SubmitBtn"
 import axios from "axios"
-import { useHistory, Redirect } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 
 const Home = () => {
     // Login states
@@ -27,7 +27,7 @@ const Home = () => {
     // Redirect to dashboard if user logged in
     const userData = localStorage.getItem('userWithToken')
     if(userData){
-        return <Redirect to="/dashboard"/>
+        history.push("/dashboard")
     }
 
     // Login handler

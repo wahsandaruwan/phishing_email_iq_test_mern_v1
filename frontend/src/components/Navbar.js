@@ -1,11 +1,28 @@
+import { useHistory } from "react-router-dom";
+
 const Navbar = ({ updateState, currState }) => {
+    // Set history
+    const history = useHistory()
+
+    // User data in local storage
+    const userData = localStorage.getItem('userWithToken')
+
+    // Logout handler
+    const loginHandler = (e) => {
+        e.preventDefault();
+        localStorage.clear()
+        history.push("/")
+    }
+
     // Elements only for normal users
     const onlyNormal = () => {
-        const { userType } = JSON.parse(localStorage.getItem('userWithToken')).userInfo
-        if (userType === "normal") {
-            return <li>
-                <a className={`${currState === "newTest" ? "active" : ""}`} onClick={() => updateState("newTest")}>New Test</a>
-            </li>
+        if(userData){
+            const { userType } = JSON.parse(userData).userInfo
+            if(userType === "normal"){
+                return <li>
+                    <a className={`${currState === "newTest" ? "active" : ""}`} onClick={() => updateState("newTest")}>New Test</a>
+                </li>
+            }
         }
     }
 
@@ -21,7 +38,7 @@ const Navbar = ({ updateState, currState }) => {
                     </li>
                     {onlyNormal()}
                     <li>
-                        <a className="lgo-btn">Logout</a>
+                        <a href="#" onClick={(e) => loginHandler(e)} className="lgo-btn">Logout</a>
                     </li>
                 </ul>
             </section>

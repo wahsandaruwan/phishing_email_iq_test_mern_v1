@@ -6,11 +6,15 @@ import Test from "../components/Test"
 import { useState } from "react"
 import Summary from "../components/Summary";
 import Table from "../components/Table";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const Dashboard = () => {   
     // Display different admin component
     const [display, setDisplay] = useState("summary")
+
+    // Set history
+    const history = useHistory()
+
     // Update the state
     const updateState = (newState) => {
         setDisplay(newState)
@@ -19,7 +23,7 @@ const Dashboard = () => {
     // Redirect to home if user not logged in
     const userData = localStorage.getItem('userWithToken')
     if(!userData){
-        return <Redirect to="/"/>
+        history.push("/")
     } 
 
     return (
