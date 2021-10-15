@@ -1,4 +1,14 @@
-const Navbar = ({updateState, currState}) => {
+const Navbar = ({ updateState, currState }) => {
+    // Elements only for normal users
+    const onlyNormal = () => {
+        const { userType } = JSON.parse(localStorage.getItem('userWithToken')).userInfo
+        if (userType === "normal") {
+            return <li>
+                <a className={`${currState === "newTest" ? "active" : ""}`} onClick={() => updateState("newTest")}>New Test</a>
+            </li>
+        }
+    }
+
     return (
         <>
             <section className="nav">
@@ -9,9 +19,7 @@ const Navbar = ({updateState, currState}) => {
                     <li>
                         <a className={`${currState === "allTest" ? "active" : ""}`} onClick={() => updateState("allTest")}>All Tests</a>
                     </li>
-                    <li>
-                        <a className={`${currState === "newTest" ? "active" : ""}`} onClick={() => updateState("newTest")}>New Test</a>
-                    </li>
+                    {onlyNormal()}
                     <li>
                         <a className="lgo-btn">Logout</a>
                     </li>

@@ -8,7 +8,7 @@ import Summary from "../components/Summary";
 import Table from "../components/Table";
 import { Redirect } from "react-router-dom";
 
-const Dashboard = ({authorized}) => {   
+const Dashboard = () => {   
     // Display different admin component
     const [display, setDisplay] = useState("summary")
     // Update the state
