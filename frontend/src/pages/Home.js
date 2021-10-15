@@ -1,8 +1,53 @@
 // Element Components
+import { useState } from "react"
 import InputBox from "../components/InputBox"
 import SubmitBtn from "../components/SubmitBtn"
+import axios from "axios"
 
 const Home = () => {
+    // Login states
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [error, setError] = useState(false)
+    const [loading, setLoading] = useState(false)
+
+    // Update email state
+    const emailState = (newValue) => {
+        setEmail(newValue)
+    }
+
+    // Update password state
+    const passwordState = (newValue) => {
+        setPassword(newValue)
+    }
+
+    // Login handler
+    const loginHandler = async (e) => {
+        e.preventDefault()
+        try{
+            const config = {
+                headers: {
+                    "Content-type": "application/json"
+                }
+            }
+
+            setLoading(true)
+
+            const details = await axios.post('http://localhost:3300/api/users/login', {
+                email,
+                password
+            },
+            config)
+            console.log(details)
+            // Save data in local storage
+            // localStorage.setItem('userData', JSON.stringify(data))
+
+            setLoading(false)
+        }catch(err){
+            setError(error)
+        }
+    }
+
     return (
         <>
             <section className="hero">
@@ -19,11 +64,11 @@ const Home = () => {
                     </ul>
                 </div>
                 <div className="login-form">
-                    <form action="">
+                    <form>
                         <h2>Login to Start...</h2>
-                        <InputBox type="text" place="Enter Your User Name..."/>
-                        <InputBox type="password" place="Enter Your Password..."/>
-                        <SubmitBtn txt="Login"/>
+                        <InputBox type="text" loginState={emailState} place="Enter Your User Name..."/>
+                        <InputBox type="password" loginState={passwordState} place="Enter Your Password..."/>
+                        <SubmitBtn loginFunc={loginHandler} txt="Login"/>
                     </form>
                 </div>
             </section>
