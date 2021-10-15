@@ -33,14 +33,14 @@ const Home = () => {
 
             setLoading(true)
 
-            const details = await axios.post('http://localhost:3300/api/users/login', {
+            const {data} = await axios.post('http://localhost:3300/api/users/login', {
                 email,
                 password
             },
             config)
-            console.log(details)
-            // Save data in local storage
-            // localStorage.setItem('userData', JSON.stringify(data))
+            console.log(data)
+            // Save token in local storage
+            localStorage.setItem('userInfo', JSON.stringify(data))
 
             setLoading(false)
         }catch(err){
