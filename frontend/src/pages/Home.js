@@ -3,12 +3,16 @@ import { useState } from "react"
 import InputBox from "../components/InputBox"
 import SubmitBtn from "../components/SubmitBtn"
 import axios from "axios"
+import { useHistory, Redirect } from "react-router-dom"
 
 const Home = () => {
     // Login states
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [loginStatus, setLoginStatus] = useState(false)
+    const [myError, setMyError] = useState("")
+
+    // Set history
+    const history = useHistory()
 
     // Update email state
     const emailState = (newValue) => {
@@ -18,6 +22,12 @@ const Home = () => {
     // Update password state
     const passwordState = (newValue) => {
         setPassword(newValue)
+    }
+
+    // Redirect to dashboard if user logged in
+    const userData = localStorage.getItem('userWithToken')
+    if(userData){
+        return <Redirect to="/dashboard"/>
     }
 
     // Login handler
@@ -40,7 +50,7 @@ const Home = () => {
             config)
 
             if(data.auth){
-                setLoginStatus(true);
+                setMyError("")
                 if(data.userInfo.userType === "admin"){
                     console.log("This is admin!")
                 }
@@ -49,13 +59,14 @@ const Home = () => {
                 }
                 // Save the data in local storage
                 localStorage.setItem('userWithToken', JSON.stringify(data))
+                // Navigate to dashboard after successful login
+                history.push("/dashboard")
             }
             else{
-                setLoginStatus(false);
                 throw Error(data.errors.message)
             }
         }catch(err){
-            console.log(err.message)
+            setMyError(err.message)
         }
     }
 
@@ -80,6 +91,9 @@ const Home = () => {
                         <InputBox type="text" loginState={emailState} place="Enter Your User Name..."/>
                         <InputBox type="password" loginState={passwordState} place="Enter Your Password..."/>
                         <SubmitBtn loginFunc={loginHandler} txt="Login"/>
+                        {myError && 
+                            <div className="err-msg">{myError}</div>
+                        }
                     </form>
                 </div>
             </section>
