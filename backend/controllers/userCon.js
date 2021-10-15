@@ -5,7 +5,7 @@ require('dotenv/config')
 
 // User registration
 exports.userRegistration = async (req, res) => {
-    const {firstName, lastName, userType, email, password} = req.body
+    const {email, password} = req.body
 
     // Password hashing
     console.log(password)
@@ -17,8 +17,11 @@ exports.userRegistration = async (req, res) => {
         return res.status(403).json({error: {message: "Email already exist!"}})
     }
 
+    // Add hashed password
+    req.body.password = password.length >= 6 ? hashPass : false
+
     // Create a new user
-    const newUser = new User({firstName, lastName, userType, email, password: password.length >= 6 ? hashPass : false})
+    const newUser = new User(req.body)
     try{
         await newUser.save()
         res.status(200).json({success: {message: "Successfully created a new user!"}})

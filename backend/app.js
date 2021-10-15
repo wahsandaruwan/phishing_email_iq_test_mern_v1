@@ -5,8 +5,10 @@ require('./helpers/mongodb_init')
 const userRoutes = require('./routes/user')
 const {authUser} = require('./middlewares/auth')
 const quizRoutes = require('./routes/quiz')
+const cors = require('cors')
 
 // Common middlewares
+app.use(cors())
 app.use(express.json())
 
 // Basic route

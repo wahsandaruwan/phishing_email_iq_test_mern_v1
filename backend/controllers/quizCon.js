@@ -12,7 +12,7 @@ exports.getAllQuizes = async (req, res) => {
 
 // Add a quiz
 exports.addQuiz = async (req, res) => {
-    const {title, quizImage, quizAns} = req.body
+    const {title} = req.body
 
     // Check if quiz title already exist
     const quiz = await Quiz.findOne({title})
@@ -21,7 +21,7 @@ exports.addQuiz = async (req, res) => {
     }
 
     // Create new quiz
-    const newQuiz = new Quiz({title, quizImage, quizAns})
+    const newQuiz = new Quiz(req.body)
     try{
         await newQuiz.save()
         res.status(200).json({success: {message: "Quiz successfully created!"}})
