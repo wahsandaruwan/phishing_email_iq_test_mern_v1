@@ -8,8 +8,7 @@ const Home = () => {
     // Login states
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [error, setError] = useState(false)
-    const [loading, setLoading] = useState(false)
+    const [loginStatus, setLoginStatus] = useState(false)
 
     // Update email state
     const emailState = (newValue) => {
@@ -24,27 +23,39 @@ const Home = () => {
     // Login handler
     const loginHandler = async (e) => {
         e.preventDefault()
-        try{
-            const config = {
-                headers: {
-                    "Content-type": "application/json"
-                }
+
+        // Configurations
+        const config = {
+            headers: {
+                "Content-type": "application/json"
             }
+        }
 
-            setLoading(true)
-
+        // Api call
+        try{
             const {data} = await axios.post('http://localhost:3300/api/users/login', {
                 email,
                 password
             },
             config)
-            console.log(data)
-            // Save token in local storage
-            localStorage.setItem('userInfo', JSON.stringify(data))
 
-            setLoading(false)
+            if(data.auth){
+                setLoginStatus(true);
+                if(data.userInfo.userType === "admin"){
+                    console.log("This is admin!")
+                }
+                else if(data.userInfo.userType === "normal"){
+                    console.log("This is normal!")
+                }
+                // Save the data in local storage
+                localStorage.setItem('userWithToken', JSON.stringify(data))
+            }
+            else{
+                setLoginStatus(false);
+                throw Error(data.errors.message)
+            }
         }catch(err){
-            setError(error)
+            console.log(err.message)
         }
     }
 
