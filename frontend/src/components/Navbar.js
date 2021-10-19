@@ -34,7 +34,7 @@ const Navbar = ({ updateState, currState }) => {
                 return (
                     <>
                         <li>
-                        <a className={`${currState === "myAllTest" ? "active" : ""}`} onClick={() => updateState("myAllTest")}>All Tests</a>
+                        <a className={`${currState === "allTest" ? "active" : ""}`} onClick={() => updateState("allTest")}>All Tests</a>
                         </li>
                         <li>
                             <a className={`${currState === "allUsers" ? "active" : ""}`} onClick={() => updateState("allUsers")}>All Users</a>

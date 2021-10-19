@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { TblData } from '../data/tempTbl'
 
 
-const Table = () => {
+const TableAllTests = () => {
     // User test table
     const [data] = useState(TblData)
     return (
@@ -50,4 +50,4 @@ const Table = () => {
     )
 }
 
-export default Table
+export default TableAllTests

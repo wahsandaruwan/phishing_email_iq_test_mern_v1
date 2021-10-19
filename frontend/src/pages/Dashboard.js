@@ -2,8 +2,10 @@
 import Navbar from "../components/Navbar"
 import Test from "../components/Test"
 import SummaryNormal from "../components/SummaryNormal"
-import Table from "../components/Table"
-import SummaryAdmin from "../components/SummaryAdmin";
+import TableUserAllTests from "../components/TableUserAllTests"
+import TableAllTests from "../components/TableAllTests"
+import TableAllUsers from "../components/TableAllUsers"
+import SummaryAdmin from "../components/SummaryAdmin"
 
 // Hooks
 import { useState } from "react"
@@ -42,7 +44,9 @@ const Dashboard = () => {
         <>
             <Navbar updateState={updateState} currState={display}/>
             {display === "summary" && setUserSummary()}
-            {display === "myAllTest" && <Table/>}
+            {display === "myAllTest" && <TableUserAllTests/>}
+            {display === "allUsers" && <TableAllUsers/>}
+            {display === "allTest" && <TableAllTests/>}
             {display === "newTest" && <Test/>}
         </>
     )
