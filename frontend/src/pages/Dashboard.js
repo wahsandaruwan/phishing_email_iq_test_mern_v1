@@ -30,7 +30,7 @@ const Dashboard = () => {
         <>
             <Navbar updateState={updateState} currState={display}/>
             {display === "summary" && <Summary/>}
-            {display === "allTest" && <Table/>}
+            {display === "myAllTest" && <Table/>}
             {display === "newTest" && <Test/>}
         </>
     )

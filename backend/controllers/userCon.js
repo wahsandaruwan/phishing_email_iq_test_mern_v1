@@ -37,18 +37,18 @@ exports.userLogin = async (req, res) => {
     // Check if email matches
     const user = await User.findOne({email})
     if(!user){
-        return res.status(403).json({error: {message: "Wrong email address!"}})
+        return res.json({auth: false, errors: {message: "Wrong email address!"}})
     }
 
     // Check if password matches
     const passOk = await bcrypt.compare(password, user.password)
     if(!passOk){
         console.log(user.password)
-        return res.status(403).json({error: {message: "Wrong password!"}})
+        return res.json({auth: false, errors: {message: "Wrong Passwrod!"}})
     }
     // Get jwt
     const token = getLoginRegToken(user)
-    res.status(200).json({success: token})
+    res.status(200).json({auth: true, success: token, userInfo: user})
 }
 
 // Get all quizes

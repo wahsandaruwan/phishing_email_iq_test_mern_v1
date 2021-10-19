@@ -15,13 +15,35 @@ const Navbar = ({ updateState, currState }) => {
     }
 
     // Elements only for normal users
-    const onlyNormal = () => {
+    const displayOnUserType = () => {
         if(userData){
             const { userType } = JSON.parse(userData).userInfo
             if(userType === "normal"){
-                return <li>
-                    <a className={`${currState === "newTest" ? "active" : ""}`} onClick={() => updateState("newTest")}>New Test</a>
-                </li>
+                return (
+                    <>
+                        <li>
+                        <a className={`${currState === "myAllTest" ? "active" : ""}`} onClick={() => updateState("myAllTest")}>My All Tests</a>
+                        </li>
+                        <li>
+                            <a className={`${currState === "newTest" ? "active" : ""}`} onClick={() => updateState("newTest")}>New Test</a>
+                        </li>
+                    </>
+                )
+            }
+            else{
+                return (
+                    <>
+                        <li>
+                        <a className={`${currState === "myAllTest" ? "active" : ""}`} onClick={() => updateState("myAllTest")}>All Tests</a>
+                        </li>
+                        <li>
+                            <a className={`${currState === "allUsers" ? "active" : ""}`} onClick={() => updateState("allUsers")}>All Users</a>
+                        </li>
+                        <li>
+                            <a className={`${currState === "allQuizes" ? "active" : ""}`} onClick={() => updateState("allQuizes")}>All Quizes</a>
+                        </li>
+                    </>
+                )
             }
         }
     }
@@ -33,10 +55,7 @@ const Navbar = ({ updateState, currState }) => {
                     <li>
                         <a className={`${currState === "summary" ? "active" : ""}`} onClick={() => updateState("summary")}>Dashboard</a>
                     </li>
-                    <li>
-                        <a className={`${currState === "allTest" ? "active" : ""}`} onClick={() => updateState("allTest")}>All Tests</a>
-                    </li>
-                    {onlyNormal()}
+                    {displayOnUserType()}
                     <li>
                         <a href="#" onClick={(e) => loginHandler(e)} className="lgo-btn">Logout</a>
                     </li>
