@@ -1,12 +1,13 @@
 // Element Components
 import Navbar from "../components/Navbar"
 import Test from "../components/Test"
+import SummaryNormal from "../components/SummaryNormal"
+import Table from "../components/Table"
+import SummaryAdmin from "../components/SummaryAdmin";
 
 // Hooks
 import { useState } from "react"
-import Summary from "../components/Summary";
-import Table from "../components/Table";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom"
 
 const Dashboard = () => {   
     // Display different admin component
@@ -26,10 +27,21 @@ const Dashboard = () => {
         history.push("/")
     } 
 
+    // Set user summary of dashboard
+    const setUserSummary = () => {
+        const { userType } = JSON.parse(userData).userInfo
+        if(userType === 'normal'){
+            return <SummaryNormal/>
+        }
+        else{
+            return <SummaryAdmin/>
+        }
+    }
+
     return (
         <>
             <Navbar updateState={updateState} currState={display}/>
-            {display === "summary" && <Summary/>}
+            {display === "summary" && setUserSummary()}
             {display === "myAllTest" && <Table/>}
             {display === "newTest" && <Test/>}
         </>

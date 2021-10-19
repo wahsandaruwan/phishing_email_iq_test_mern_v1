@@ -4,7 +4,7 @@ import SumBox from "./SumBox"
 // Icons
 import {BiBadgeCheck, BiBookmarks, BiTime} from "react-icons/bi"
 
-const Summary = () => {
+const SummaryNormal = () => {
     return (
         <>
             <section className="summary">
@@ -16,4 +16,4 @@ const Summary = () => {
     )
 }
 
-export default Summary
+export default SummaryNormal
