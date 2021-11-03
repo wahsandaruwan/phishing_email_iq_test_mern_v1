@@ -1,7 +1,7 @@
-const SubmitBtn = ({txt, loginFunc}) => {
+const SubmitBtn = ({txt, clickFunc}) => {
     return (
         <>
-            <a className="su-btn" onClick={(e) => loginFunc(e)} href="">{txt}</a>
+            <a className="su-btn" onClick={(e) => clickFunc(e)} href="">{txt}</a>
         </>
     )
 }

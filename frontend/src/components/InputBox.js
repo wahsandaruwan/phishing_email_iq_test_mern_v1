@@ -1,7 +1,7 @@
-const InputBox = ({type, place, loginState}) => {
+const InputBox = ({type, place, inputState}) => {
     return (
         <>
-            <input className="inp" onChange={(e) => loginState(e.target.value)} type={type} placeholder={place}/>
+            <input className="inp" onChange={(e) => inputState(e.target.value)} type={type} placeholder={place}/>
         </>
     )
 }

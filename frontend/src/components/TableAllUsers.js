@@ -1,10 +1,16 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 
+import SubmitBtn from "../components/SubmitBtn"
+
 // Data
 import { TblData } from '../data/tempTbl'
+import CreateUserPopUp from './CreateUserPopUp'
 
 const TableAllUsers = () => {
+    // Create user form state
+    const [showCreateUser, setShowCreateUser] = useState(false)
+
     // Users state
     const [users, setUsers] = useState([])
 
@@ -28,15 +34,23 @@ const TableAllUsers = () => {
             console.log(data)
             setUsers(data)
         } catch (err) {
-            console.log(err.message)
+            console.log(err)
         }
     }, [])
 
-    // User test table
-    const [data] = useState(TblData)
+    // Handle create user form
+    const toggleCreateUserForm = (e) => {
+        e.preventDefault()
+        setShowCreateUser(!showCreateUser)
+        console.log(showCreateUser)
+    }
+
     return (
         <>
-            <section className="all-tests">
+            <section className="all-users">
+                <div className="create-user-btn">
+                    <SubmitBtn clickFunc={toggleCreateUserForm} txt="Create a New User"/>
+                </div>
                 <h3>All Users</h3>
                 {users.length > 0 && (
                     <div className="tbl-div">
@@ -72,6 +86,9 @@ const TableAllUsers = () => {
                     </div>
                 )}
             </section>
+            {
+                showCreateUser && <CreateUserPopUp/>
+            }
         </>
     )
 }

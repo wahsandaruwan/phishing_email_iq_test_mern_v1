@@ -147,6 +147,26 @@ th{
     background-color: #d42e2e;
 }
 
+/* -----Common popup----- */
+.popup{
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(49, 48, 48, 0.8);
+}
+
+.popup .popup-form{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #e0dfdf;
+    padding: 20px;
+}
+
 /* -------Home page------- */
 
 /* -----Hero----- */
@@ -336,28 +356,38 @@ th{
     border-radius: 8px;
 }
 
-/* -----All tests component----- */
-.all-tests{
+/* -----All tests, all quizes & all users component----- */
+/* Common */
+.all-tests,
+.all-users{
+    max-width: 1000px;
     width: 100%;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 90px 20px;
+    padding: 90px 30px;
+    margin: 0 auto;
 }
 
-/* Heading */
-.all-tests h3{
+.all-tests h3,
+.all-users h3{
     font-size: 2rem;
     margin-bottom: 20px;
 }
 
-.all-tests .tbl-div{
-    max-width: 800px;
+.all-tests .tbl-div,
+.all-users .tbl-div{
     width: 100%;
     max-height: 700px;
     overflow-y: scroll;
+}
+
+.all-users .create-user-btn{
+    width: 200px;
+    margin-left: auto;
+    margin-bottom: 20px;
 }
 
 

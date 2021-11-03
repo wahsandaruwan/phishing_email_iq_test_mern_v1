@@ -88,9 +88,9 @@ const Home = () => {
                 <div className="login-form">
                     <form>
                         <h2>Login to Start...</h2>
-                        <InputBox type="text" loginState={emailState} place="Enter Your User Name..."/>
-                        <InputBox type="password" loginState={passwordState} place="Enter Your Password..."/>
-                        <SubmitBtn loginFunc={loginHandler} txt="Login"/>
+                        <InputBox type="text" inputState={emailState} place="Enter Your User Name..."/>
+                        <InputBox type="password" inputState={passwordState} place="Enter Your Password..."/>
+                        <SubmitBtn clickFunc={loginHandler} txt="Login"/>
                         {myError && 
                             <div className="err-msg">{myError}</div>
                         }
