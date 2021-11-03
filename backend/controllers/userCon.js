@@ -42,7 +42,7 @@ exports.userLogin = async (req, res) => {
     const {email, password} = req.body
 
     if(email === ""){
-        return res.json({auth: false, errors: {message: "Enter the email address!"}})
+        return res.json({auth: false, errors: {message: "Enter an email address!"}})
     }
     else if(password === ""){
         return res.json({auth: false, errors: {message: "Enter the password!"}})
