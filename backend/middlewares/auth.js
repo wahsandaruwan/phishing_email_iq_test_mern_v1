@@ -12,24 +12,24 @@ exports.authUser = (req, res, next) => {
                 req.user = user
                 return next()
             }catch(err){
-                return res.status(404).json({error: {message: "Invalid or expired token!"}})
+                return res.json({authEx: true, errors: {message: "Invalid or expired token!"}})
             }
         }
-        return res.status(403).json({error: {message: "Authorization token must be Bearer [token]"}})
+        return res.json({errors: {message: "Authorization token must be Bearer [token]"}})
     }
-    return res.status(403).json({error: {message: "Authorization header must be provided!"}})
+    return res.json({errors: {message: "Authorization header must be provided!"}})
 }
 
 // User role validation
 exports.authRole = (roles) => {
     return (req, res, next) => {
         const userRole = req.user.userType
-        console.log(userRole)
+        console.log("fff"+userRole)
         if(roles.includes(userRole)){
             next()
         }
         else{
-            return res.status(401).json({error: {message: "You don't have permission!"}})
+            return res.status(401).json({errors: {message: "You don't have permission!"}})
         }
     }
 }

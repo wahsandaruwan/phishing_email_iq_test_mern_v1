@@ -1,10 +1,7 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 
-import SubmitBtn from "../components/SubmitBtn"
-
-// Data
-import { TblData } from '../data/tempTbl'
+import SubmitBtn from "./SubmitBtn"
 import CreateUserPopUp from './CreateUserPopUp'
 
 const TableAllUsers = () => {
@@ -87,7 +84,7 @@ const TableAllUsers = () => {
                 )}
             </section>
             {
-                showCreateUser && <CreateUserPopUp/>
+                showCreateUser && <CreateUserPopUp togglePopUp={toggleCreateUserForm}/>
             }
         </>
     )

@@ -8,7 +8,7 @@ const Navbar = ({ updateState, currState }) => {
     const userData = localStorage.getItem('userWithToken')
 
     // Logout handler
-    const loginHandler = (e) => {
+    const logoutHandler = (e) => {
         e.preventDefault();
         localStorage.clear()
         history.push("/")
@@ -57,7 +57,7 @@ const Navbar = ({ updateState, currState }) => {
                     </li>
                     {displayOnUserType()}
                     <li>
-                        <a href="#" onClick={(e) => loginHandler(e)} className="lgo-btn">Logout</a>
+                        <a href="#" onClick={(e) => logoutHandler(e)} className="lgo-btn">Logout</a>
                     </li>
                 </ul>
             </section>
