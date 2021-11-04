@@ -25,8 +25,8 @@ const TableAllUsers = () => {
         headers: { Authorization: `Bearer ${token}` }
     };
 
-    // Handle fetching all users
-    useEffect(async () => {
+    // Fetching user handler
+    const userFetchhandler = async () => {
         try {
             const {data} = await axios.get(
                 'http://localhost:3300/api/users/',
@@ -44,6 +44,11 @@ const TableAllUsers = () => {
         } catch (err) {
             console.log(err)
         }
+    }
+
+    // Handle fetching all users
+    useEffect(() => {
+        userFetchhandler()
     }, [])
 
     // Handle create user form
@@ -51,6 +56,12 @@ const TableAllUsers = () => {
         e.preventDefault()
         setShowCreateUser(!showCreateUser)
         console.log(showCreateUser)
+    }
+
+    // Add added user to the table
+    const userAddToTable = (userObj) => {
+        console.log(userObj)
+        userFetchhandler()
     }
 
     return (
@@ -97,7 +108,7 @@ const TableAllUsers = () => {
                 )}
             </section>
             {
-                showCreateUser && <CreateUserPopUp togglePopUp={toggleCreateUserForm}/>
+                showCreateUser && <CreateUserPopUp userToTable={userAddToTable} togglePopUp={toggleCreateUserForm}/>
             }
         </>
     )
