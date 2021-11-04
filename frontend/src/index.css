@@ -156,6 +156,25 @@ th{
     background-color: #d42e2e;
 }
 
+/* Table buttons */
+.tbl-btn{
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+}
+
+.tbl-btn:hover{
+    background-color: #000;
+}
+
+.del{
+    background-color: #d42e2e;
+}
+
+.edit{
+    background-color: #1ba73e;
+}
+
 /* -----Common popup----- */
 .popup .overlay{
     position: fixed;

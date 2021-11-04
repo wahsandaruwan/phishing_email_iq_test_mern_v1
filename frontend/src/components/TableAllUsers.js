@@ -29,7 +29,7 @@ const TableAllUsers = () => {
     const userFetchhandler = async () => {
         try {
             const {data} = await axios.get(
-                'http://localhost:3300/api/users/',
+                `http://localhost:3300/api/users/`,
                 config
             )
             if(data.authEx){
@@ -42,7 +42,7 @@ const TableAllUsers = () => {
                 setUsers(data)
             }
         } catch (err) {
-            console.log(err)
+            alert(err.message)
         }
     }
 
@@ -58,10 +58,36 @@ const TableAllUsers = () => {
         console.log(showCreateUser)
     }
 
-    // Add added user to the table
-    const userAddToTable = (userObj) => {
-        console.log(userObj)
-        userFetchhandler()
+    // Delete user handler
+    const userDeleteHandler = async (e, userId) => {
+        e.preventDefault()
+        if(window.confirm("Are you really want to delete this user?")){
+            try {
+                const {data} = await axios.delete(
+                    `http://localhost:3300/api/users/${userId}`,
+                    config
+                )
+                if(data.created){
+                    alert(data.success.message)
+                    // Refresh user table
+                    userFetchhandler()
+                }
+                else{
+                    if(data.authEx){
+                        console.log(data.errors.message)
+                        alert(data.errors.message)
+                        // Clear local storage and navigate to login page
+                        localStorage.clear()
+                        history.push("/")
+                    }
+                    else{
+                        throw Error(data.errors.message)
+                    }
+                }
+            }catch(err){
+                alert(err.message)
+            }
+        }
     }
 
     return (
@@ -82,6 +108,7 @@ const TableAllUsers = () => {
                                     <th>Last Name</th>
                                     <th>User Type</th>
                                     <th>Email</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,7 +116,7 @@ const TableAllUsers = () => {
                                     users.map((obj, index) => {
                                         console.log(obj)
                                         // Destructure
-                                        const {_id, firstName, lastName, userType, email, password} = obj
+                                        const {_id, firstName, lastName, userType, email} = obj
                                         return(
                                             <tr key={_id}>
                                                 <td>{index+1}</td>
@@ -98,6 +125,7 @@ const TableAllUsers = () => {
                                                 <td>{lastName}</td>
                                                 <td>{userType}</td>
                                                 <td>{email}</td>
+                                                <td><a href="#" className="tbl-btn del" onClick={(e) => userDeleteHandler(e, _id)}>Delete</a></td>
                                             </tr>
                                         )
                                     })
@@ -108,7 +136,7 @@ const TableAllUsers = () => {
                 )}
             </section>
             {
-                showCreateUser && <CreateUserPopUp userToTable={userAddToTable} togglePopUp={toggleCreateUserForm}/>
+                showCreateUser && <CreateUserPopUp refreshUserTable={userFetchhandler} togglePopUp={toggleCreateUserForm}/>
             }
         </>
     )

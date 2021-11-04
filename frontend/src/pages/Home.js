@@ -43,7 +43,7 @@ const Home = () => {
 
         // Api call
         try{
-            const {data} = await axios.post('http://localhost:3300/api/users/login', {
+            const {data} = await axios.post(`http://localhost:3300/api/users/login`, {
                 email,
                 password
             },

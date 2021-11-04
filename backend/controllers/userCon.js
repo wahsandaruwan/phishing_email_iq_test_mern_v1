@@ -31,7 +31,7 @@ exports.userRegistration = async (req, res) => {
     console.log(newUser)
     try{
         await newUser.save()
-        res.json({created: true, success: {message: "Successfully created a new user!"}})
+        res.status(200).json({created: true, success: {message: "Successfully created a new user!"}})
     }catch(err){
         res.json({auth: false, errors: {message: Object.entries(err.errors)[0][1].message}})
     }
@@ -109,9 +109,9 @@ exports.updateUser = async (req, res) => {
     req.body.password = password.length >= 6 ? hashPass : false
     try{
         await User.findOneAndUpdate({_id: userId}, req.body, {new: true, runValidators: true})
-        res.status(200).json({success: {message: "User successfully updated!"}})
+        res.status(200).json({created: true, success: {message: "User successfully updated!"}})
     }catch(err){
-        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({auth: false, errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 
@@ -121,9 +121,9 @@ exports.deleteUser = async (req, res) => {
 
     try{
         await User.findByIdAndDelete(userId)
-        res.status(200).json({success: {message: "User successfully deleted!"}})
+        res.status(200).json({created: true, success: {message: "User successfully deleted!"}})
     }catch(err){
-        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({auth: false, errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 

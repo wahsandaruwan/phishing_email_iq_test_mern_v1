@@ -6,7 +6,7 @@ import { BiX } from "react-icons/bi"
 import InputBox from "./InputBox"
 import SubmitBtn from "./SubmitBtn"
 
-const CreateUserPopUp = ({userToTable, togglePopUp}) => {
+const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
     // New user states
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -77,8 +77,8 @@ const CreateUserPopUp = ({userToTable, togglePopUp}) => {
                 setTimeout(() => { 
                     togglePopUp(e)
                 }, 2000)
-                // Update the table with added user
-                userToTable()
+                // Refresh user table
+                refreshUserTable()
             }
             else{
                 if(data.authEx){
