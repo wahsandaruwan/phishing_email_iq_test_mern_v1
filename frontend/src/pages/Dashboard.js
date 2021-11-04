@@ -31,12 +31,14 @@ const Dashboard = () => {
 
     // Set user summary of dashboard
     const setUserSummary = () => {
-        const { userType } = JSON.parse(userData).userInfo
-        if(userType === 'normal'){
-            return <SummaryNormal/>
-        }
-        else{
-            return <SummaryAdmin/>
+        if(userData){
+            const { userType } = JSON.parse(userData).userInfo
+            if(userType === 'normal'){
+                return <SummaryNormal/>
+            }
+            else{
+                return <SummaryAdmin/>
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+import { useHistory } from "react-router-dom"
 
 import SubmitBtn from "./SubmitBtn"
 import CreateUserPopUp from './CreateUserPopUp'
@@ -10,6 +11,9 @@ const TableAllUsers = () => {
 
     // Users state
     const [users, setUsers] = useState([])
+
+    // Set history
+    const history = useHistory()
 
     // Token from local storage
     const userData = localStorage.getItem('userWithToken')
@@ -28,8 +32,15 @@ const TableAllUsers = () => {
                 'http://localhost:3300/api/users/',
                 config
             )
-            console.log(data)
-            setUsers(data)
+            if(data.authEx){
+                alert(data.errors.message)
+                // Clear local storage and navigate to login page
+                localStorage.clear()
+                history.push("/")
+            }
+            else{
+                setUsers(data)
+            }
         } catch (err) {
             console.log(err)
         }
@@ -54,6 +65,7 @@ const TableAllUsers = () => {
                         <table className="dt-table">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>ID</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
@@ -63,12 +75,13 @@ const TableAllUsers = () => {
                             </thead>
                             <tbody>
                                 {
-                                    users.map((obj) => {
+                                    users.map((obj, index) => {
                                         console.log(obj)
                                         // Destructure
                                         const {_id, firstName, lastName, userType, email, password} = obj
                                         return(
                                             <tr key={_id}>
+                                                <td>{index+1}</td>
                                                 <td>{_id}</td>
                                                 <td>{firstName}</td>
                                                 <td>{lastName}</td>

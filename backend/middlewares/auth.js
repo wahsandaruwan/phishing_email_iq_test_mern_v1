@@ -12,7 +12,7 @@ exports.authUser = (req, res, next) => {
                 req.user = user
                 return next()
             }catch(err){
-                return res.json({authEx: true, errors: {message: "Invalid or expired token!"}})
+                return res.json({authEx: true, errors: {message: "Your login session has expired!"}})
             }
         }
         return res.json({errors: {message: "Authorization token must be Bearer [token]"}})
