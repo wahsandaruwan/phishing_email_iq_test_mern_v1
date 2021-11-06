@@ -433,7 +433,7 @@ th{
 .all-users .tbl-div{
     width: 100%;
     max-height: 600px;
-    overflow-y: scroll;
+    overflow: scroll;
     background-color: #000;
     padding: 20px;
 }

@@ -1,4 +1,17 @@
 const Quiz = require('../models/Quiz')
+const multer = require('multer')
+
+// Image storage define
+const storage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, ".../frontend/public/uploads/")
+    },
+    filename: (req, file, callback) => {
+        callback(null, file.originalname)
+    }
+})
+
+const upload = multer({storage: storage})
 
 // Get all quizes
 exports.getAllQuizes = async (req, res) => {
@@ -12,16 +25,22 @@ exports.getAllQuizes = async (req, res) => {
 
 // Add a quiz
 exports.addQuiz = async (req, res) => {
-    const {title} = req.body
+    upload.single("quizImage")
+    const {title, quizAns} = req.body
+    const {quizImage} = req.file
 
     // Check if quiz title already exist
     const quiz = await Quiz.findOne({title})
     if(quiz){
-        return res.status(403).json({error: {message: "Quiz title already exist!"}})
+        return res.json({errors: {message: "Quiz title already exist!"}})
     }
 
     // Create new quiz
-    const newQuiz = new Quiz(req.body)
+    const newQuiz = new Quiz({
+        title,
+        quizImage,
+        quizAns
+    })
     try{
         await newQuiz.save()
         res.status(200).json({success: {message: "Quiz successfully created!"}})
@@ -44,7 +63,10 @@ exports.getQuizById = async (req, res) => {
 
 // Update quiz
 exports.updateQuiz = async (req, res) => {
+    upload.single("quizImage")
     const {quizId} = req.params
+    const {title, quizAns} = req.body
+    const {quizImage} = req.file
 
     // Check if quiz title already exist
     const quiz = await Quiz.findOne({title: req.body.title})
@@ -55,7 +77,7 @@ exports.updateQuiz = async (req, res) => {
     }
 
     try{
-        await Quiz.findOneAndUpdate({_id: quizId}, req.body, {new: true, runValidators: true})
+        await Quiz.findOneAndUpdate({_id: quizId}, {title, quizImage, quizAns}, {new: true, runValidators: true})
         res.status(200).json({success: {message: "Quiz successfully updated!"}})
     }catch(err){
         res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
