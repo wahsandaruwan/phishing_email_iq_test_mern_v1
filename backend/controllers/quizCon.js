@@ -19,7 +19,7 @@ exports.getAllQuizes = async (req, res) => {
         const quizes = await Quiz.find()
         res.status(200).json(quizes)
     }catch(err){
-        res.status(403).json({errors: {message: err.message}})
+        res.json({errors: {message: err.message}})
     }
 }
 
@@ -43,9 +43,9 @@ exports.addQuiz = async (req, res) => {
     })
     try{
         await newQuiz.save()
-        res.status(200).json({success: {message: "Quiz successfully created!"}})
+        res.status(200).json({created: true, success: {message: "Quiz successfully created!"}})
     }catch(err){
-        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 
@@ -57,7 +57,7 @@ exports.getQuizById = async (req, res) => {
         const quiz = await Quiz.findById(quizId)
         res.status(200).json(quiz)
     }catch(err){
-        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 
@@ -72,15 +72,15 @@ exports.updateQuiz = async (req, res) => {
     const quiz = await Quiz.findOne({title: req.body.title})
     if(quiz){
         if(quiz.id !== quizId){
-            return res.status(403).json({error: {message: "Quiz title already exist!"}})
+            return res.json({errors: {message: "Quiz title already exist!"}})
         }
     }
 
     try{
         await Quiz.findOneAndUpdate({_id: quizId}, {title, quizImage, quizAns}, {new: true, runValidators: true})
-        res.status(200).json({success: {message: "Quiz successfully updated!"}})
+        res.status(200).json({created: true, success: {message: "Quiz successfully updated!"}})
     }catch(err){
-        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 
@@ -90,9 +90,9 @@ exports.deleteQuiz = async (req, res) => {
 
     try{
         await Quiz.findByIdAndDelete(quizId)
-        res.status(200).json({success: {message: "Quiz successfully deleted!"}})
+        res.status(200).json({created: true, success: {message: "Quiz successfully deleted!"}})
     }catch(err){
-        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 

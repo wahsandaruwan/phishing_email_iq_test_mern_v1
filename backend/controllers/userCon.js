@@ -33,7 +33,7 @@ exports.userRegistration = async (req, res) => {
         await newUser.save()
         res.status(200).json({created: true, success: {message: "Successfully created a new user!"}})
     }catch(err){
-        res.json({auth: false, errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 
@@ -42,23 +42,23 @@ exports.userLogin = async (req, res) => {
     const {email, password} = req.body
 
     if(email === ""){
-        return res.json({auth: false, errors: {message: "Enter an email address!"}})
+        return res.json({errors: {message: "Enter an email address!"}})
     }
     else if(password === ""){
-        return res.json({auth: false, errors: {message: "Enter the password!"}})
+        return res.json({errors: {message: "Enter the password!"}})
     }
     else{
         // Check if email matches
         const user = await User.findOne({email})
         if(!user){
-            return res.json({auth: false, errors: {message: "Wrong email address!"}})
+            return res.json({errors: {message: "Wrong email address!"}})
         }
 
         // Check if password matches
         const passOk = await bcrypt.compare(password, user.password)
         if(!passOk){
             console.log(user.password)
-            return res.json({auth: false, errors: {message: "Wrong Passwrod!"}})
+            return res.json({errors: {message: "Wrong Passwrod!"}})
         }
         // Get jwt
         const token = getLoginRegToken(user)
@@ -73,7 +73,7 @@ exports.getAllUsers = async (req, res) => {
         console.log(users)
         res.status(200).json(users)
     }catch(err){
-        res.status(403).json({errors: {message: err.message}})
+        res.json({errors: {message: err.message}})
     }
 }
 
@@ -85,7 +85,7 @@ exports.getUserById = async (req, res) => {
         const user = await User.findById(userId)
         res.status(200).json(user)
     }catch(err){
-        res.status(403).json({errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 
@@ -111,7 +111,7 @@ exports.updateUser = async (req, res) => {
         await User.findOneAndUpdate({_id: userId}, req.body, {new: true, runValidators: true})
         res.status(200).json({created: true, success: {message: "User successfully updated!"}})
     }catch(err){
-        res.json({auth: false, errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 
@@ -123,7 +123,7 @@ exports.deleteUser = async (req, res) => {
         await User.findByIdAndDelete(userId)
         res.status(200).json({created: true, success: {message: "User successfully deleted!"}})
     }catch(err){
-        res.json({auth: false, errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
 

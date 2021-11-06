@@ -5,12 +5,12 @@ import { useHistory } from "react-router-dom"
 import SubmitBtn from "./SubmitBtn"
 import CreateUserPopUp from './CreateUserPopUp'
 
-const TableAllUsers = () => {
-    // Create user form state
-    const [showCreateUser, setShowCreateUser] = useState(false)
+const TableAllQuizes = () => {
+    // Create quiz form state
+    const [showCreateQuiz, setShowCreateQuiz] = useState(false)
 
     // Users state
-    const [users, setUsers] = useState([])
+    const [quizes, setQuizes] = useState([])
 
     // Set history
     const history = useHistory()
@@ -25,11 +25,11 @@ const TableAllUsers = () => {
         headers: { Authorization: `Bearer ${token}` }
     };
 
-    // Fetching user handler
-    const userFetchhandler = async () => {
+    // Fetching quizes handler
+    const quizFetchhandler = async () => {
         try {
             const {data} = await axios.get(
-                `http://localhost:3300/api/users/`,
+                `http://localhost:3300/api/quizes/`,
                 config
             )
             if(data.authEx){
@@ -39,7 +39,7 @@ const TableAllUsers = () => {
                 history.push("/")
             }
             else{
-                setUsers(data)
+                setQuizes(data)
             }
         } catch (err) {
             alert(err.message)
@@ -48,29 +48,30 @@ const TableAllUsers = () => {
 
     // Handle fetching all users
     useEffect(() => {
-        userFetchhandler()
+        quizFetchhandler()
     }, [])
 
     // Handle create user form
-    const toggleCreateUserForm = (e) => {
+    const toggleCreateQuizForm = (e) => {
         e.preventDefault()
-        setShowCreateUser(!showCreateUser)
-        console.log(showCreateUser)
+        setShowCreateQuiz(!showCreateQuiz)
+        console.log(showCreateQuiz)
     }
 
-    // Delete user handler
-    const userDeleteHandler = async (e, userId) => {
+    // Delete quiz handler
+    const quizDeleteHandler = async (e, quizId) => {
+        console.log(quizId)
         e.preventDefault()
-        if(window.confirm("Are you really want to delete this user?")){
+        if(window.confirm("Are you really want to delete this quiz?")){
             try {
                 const {data} = await axios.delete(
-                    `http://localhost:3300/api/users/${userId}`,
+                    `http://localhost:3300/api/quizes/${quizId}`,
                     config
                 )
                 if(data.created){
                     alert(data.success.message)
                     // Refresh user table
-                    userFetchhandler()
+                    quizFetchhandler()
                 }
                 else{
                     if(data.authEx){
@@ -94,38 +95,36 @@ const TableAllUsers = () => {
         <>
             <section className="all-data">
                 <div className="create-uq-btn">
-                    <SubmitBtn clickFunc={toggleCreateUserForm} txt="Create a New User"/>
+                    <SubmitBtn clickFunc={toggleCreateQuizForm} txt="Create a New Quiz"/>
                 </div>
-                <h3>All Users</h3>
-                {users.length > 0 && (
+                <h3>All Quizes</h3>
+                {quizes.length > 0 && (
                     <div className="tbl-div">
                         <table className="dt-table">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>User Type</th>
-                                    <th>Email</th>
+                                    <th>Quiz Title</th>
+                                    <th>Quiz Image</th>
+                                    <th>Quiz Answer</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    users.map((obj, index) => {
+                                    quizes.map((obj, index) => {
                                         console.log(obj)
                                         // Destructure
-                                        const {_id, firstName, lastName, userType, email} = obj
+                                        const {_id, title, quizImage, quizAns} = obj
                                         return(
                                             <tr key={_id}>
                                                 <td>{index+1}</td>
                                                 <td>{_id}</td>
-                                                <td>{firstName}</td>
-                                                <td>{lastName}</td>
-                                                <td>{userType}</td>
-                                                <td>{email}</td>
-                                                <td><a href="#" className="tbl-btn del" onClick={(e) => userDeleteHandler(e, _id)}>Delete</a></td>
+                                                <td>{title}</td>
+                                                <td className="tbl-quiz-img"><img src={quizImage}/></td>
+                                                <td>{quizAns}</td>
+                                                <td><a href="#" className="tbl-btn del" onClick={(e) => quizDeleteHandler(e, _id)}>Delete</a></td>
                                             </tr>
                                         )
                                     })
@@ -136,10 +135,10 @@ const TableAllUsers = () => {
                 )}
             </section>
             {
-                showCreateUser && <CreateUserPopUp refreshUserTable={userFetchhandler} togglePopUp={toggleCreateUserForm}/>
+                showCreateQuiz && <CreateUserPopUp refreshUserTable={quizFetchhandler} togglePopUp={toggleCreateQuizForm}/>
             }
         </>
     )
 }
 
-export default TableAllUsers
+export default TableAllQuizes

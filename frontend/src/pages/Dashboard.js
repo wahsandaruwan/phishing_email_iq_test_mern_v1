@@ -5,6 +5,7 @@ import SummaryNormal from "../components/SummaryNormal"
 import TableUserAllTests from "../components/TableUserAllTests"
 import TableAllTests from "../components/TableAllTests"
 import TableAllUsers from "../components/TableAllUsers"
+import TableAllQuizes from "../components/TableAllQuizes"
 import SummaryAdmin from "../components/SummaryAdmin"
 
 // Hooks
@@ -49,6 +50,7 @@ const Dashboard = () => {
             {display === "myAllTest" && <TableUserAllTests/>}
             {display === "allUsers" && <TableAllUsers/>}
             {display === "allTest" && <TableAllTests/>}
+            {display === "allQuizes" && <TableAllQuizes/>}
             {display === "newTest" && <Test/>}
         </>
     )
