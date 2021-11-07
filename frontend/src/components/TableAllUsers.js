@@ -125,7 +125,7 @@ const TableAllUsers = () => {
                                                 <td>{lastName}</td>
                                                 <td>{userType}</td>
                                                 <td>{email}</td>
-                                                <td><a href="#" className="tbl-btn del" onClick={(e) => userDeleteHandler(e, _id)}>Delete</a></td>
+                                                <td className="del-td"><a href="#" className="tbl-btn del" onClick={(e) => userDeleteHandler(e, _id)}>Delete</a></td>
                                             </tr>
                                         )
                                     })

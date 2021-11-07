@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useHistory } from "react-router-dom"
 
 import SubmitBtn from "./SubmitBtn"
-import CreateUserPopUp from './CreateUserPopUp'
+import CreateQuizPopUp from './CreateQuizPopUp'
 
 const TableAllQuizes = () => {
     // Create quiz form state
@@ -122,9 +122,9 @@ const TableAllQuizes = () => {
                                                 <td>{index+1}</td>
                                                 <td>{_id}</td>
                                                 <td>{title}</td>
-                                                <td className="tbl-quiz-img"><img src={quizImage}/></td>
+                                                <td className="tbl-quiz-img"><img src={"./uploads/" + quizImage}/></td>
                                                 <td>{quizAns}</td>
-                                                <td><a href="#" className="tbl-btn del" onClick={(e) => quizDeleteHandler(e, _id)}>Delete</a></td>
+                                                <td className="del-td"><a href="#" className="tbl-btn del" onClick={(e) => quizDeleteHandler(e, _id)}>Delete</a></td>
                                             </tr>
                                         )
                                     })
@@ -135,7 +135,7 @@ const TableAllQuizes = () => {
                 )}
             </section>
             {
-                showCreateQuiz && <CreateUserPopUp refreshUserTable={quizFetchhandler} togglePopUp={toggleCreateQuizForm}/>
+                showCreateQuiz && <CreateQuizPopUp refreshQuizTable={quizFetchhandler} togglePopUp={toggleCreateQuizForm}/>
             }
         </>
     )

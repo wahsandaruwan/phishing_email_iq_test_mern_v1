@@ -1,17 +1,5 @@
 const Quiz = require('../models/Quiz')
-const multer = require('multer')
-
-// Image storage define
-const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null, ".../frontend/public/uploads/")
-    },
-    filename: (req, file, callback) => {
-        callback(null, file.originalname)
-    }
-})
-
-const upload = multer({storage: storage})
+const {upload} = require('../helpers/imageup')
 
 // Get all quizes
 exports.getAllQuizes = async (req, res) => {
@@ -25,28 +13,37 @@ exports.getAllQuizes = async (req, res) => {
 
 // Add a quiz
 exports.addQuiz = async (req, res) => {
-    upload.single("quizImage")
-    const {title, quizAns} = req.body
-    const {quizImage} = req.file
+    upload(req, res, async (err) => {
+        // Image errors
+        if(err){
+            return res.json({errors: {message: err.message}})
+        }
+        
+        const {title, quizAns} = req.body
+        const quizImage = req.file.filename
 
-    // Check if quiz title already exist
-    const quiz = await Quiz.findOne({title})
-    if(quiz){
-        return res.json({errors: {message: "Quiz title already exist!"}})
-    }
+        // Check if quiz title already exist
+        const quiz = await Quiz.findOne({title})
+        if(quiz){
+            return res.json({errors: {message: "Quiz title already exist!"}})
+        }
 
-    // Create new quiz
-    const newQuiz = new Quiz({
-        title,
-        quizImage,
-        quizAns
+        // Create new quiz
+        const newQuiz = new Quiz({
+            title,
+            quizImage,
+            quizAns
+        })
+        try{
+            console.log("File upload1")
+            await newQuiz.save()
+            res.status(200).json({created: true, success: {message: "Quiz successfully created!"}})
+        }catch(err){
+            console.log("File upload2")
+            res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
+        }
     })
-    try{
-        await newQuiz.save()
-        res.status(200).json({created: true, success: {message: "Quiz successfully created!"}})
-    }catch(err){
-        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
-    }
+    
 }
 
 // Get quiz by id

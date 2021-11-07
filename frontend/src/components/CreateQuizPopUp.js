@@ -6,13 +6,11 @@ import { BiX } from "react-icons/bi"
 import InputBox from "./InputBox"
 import SubmitBtn from "./SubmitBtn"
 
-const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
-    // New user states
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [userType, setUserType] = useState("")
-    const [userEmail, setUserEmail] = useState("")
-    const [userPassword, setUserPassword] = useState("")
+const CreateQuizPopUp = ({refreshQuizTable, togglePopUp}) => {
+    // New quiz states
+    const [title, setTitle] = useState("")
+    const [quizImage, setQuizImage] = useState("")
+    const [quizAns, setQuizAns] = useState("")
     const [myError, setMyError] = useState("")
     const [mySuccess, setMySuccess] = useState("")
 
@@ -23,52 +21,48 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
     const userData = localStorage.getItem('userWithToken')
     const token = JSON.parse(userData).success
 
-    // Update first name state
-    const firstNameState = (newValue) => {
-        setFirstName(newValue)
+    // Update title state
+    const titleState = (newValue) => {
+        setTitle(newValue)
     }
 
-    // Update last name state
-    const lastNameState = (newValue) => {
-        setLastName(newValue)
+    // Update image state
+    const imageState = (imgName) => {
+        console.log(imgName)
+        setQuizImage(imgName)
     }
 
-    // Update user type state
-    const userTypeState = (newValue) => {
-        setUserType(newValue)
-    }
-    
-    // Update user email state
-    const userEmailState = (newValue) => {
-        setUserEmail(newValue)
+    // Update answer state
+    const answerState = (newValue) => {
+        setQuizAns(newValue)
     }
 
-    // Update user password state
-    const userPasswordState = (newValue) => {
-        setUserPassword(newValue)
-    }
-
-    // Create user handler
-    const createUserHandler = async (e) => {
+    const createQuizHandler1 = (e) => {
         e.preventDefault()
+    }
+
+    // Create quiz handler
+    const createQuizHandler = async (e) => {
+        e.preventDefault()
+
+        // Set form data
+        const formData = new FormData()
+        formData.append("title", title)
+        formData.append("quizImage", quizImage)
+        formData.append("quizAns", quizAns)
 
         // Configurations
         const config = {
             headers: {
-                "Content-type": "application/json",
+                "Content-type": "multipart/form-data",
                 "Authorization": "Bearer "+token
             }
         }
 
         // Api call
         try{
-            const {data} = await axios.post('http://localhost:3300/api/users/register', {
-                firstName,
-                lastName,
-                userType,
-                userEmail,
-                userPassword
-            },
+            const {data} = await axios.post('http://localhost:3300/api/quizes/',
+            formData,
             config)
 
             if(data.created){
@@ -78,7 +72,7 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
                     togglePopUp(e)
                 }, 2000)
                 // Refresh user table
-                refreshUserTable()
+                refreshQuizTable()
             }
             else{
                 if(data.authEx){
@@ -106,17 +100,15 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
             <section className="popup">
                 <div className="overlay" onClick={(e) => togglePopUp(e)}></div>
                 <form className="popup-form">
-                    <h2>Create a New User</h2>
-                    <InputBox inputState={firstNameState} type="text" place="Enter First Name..."/>
-                    <InputBox inputState={lastNameState} type="text" place="Enter First Name..."/>
-                    <select id="user-type" className="uq-drop" onChange={(e) => userTypeState(e.target.value)}>
+                    <h2>Create a New Quiz</h2>
+                    <InputBox inputState={titleState} type="text" place="Enter Quiz Title..."/>
+                    <input className="file-up" type="file" onChange={(e) => imageState(e.target.files[0])}/>
+                    <select id="user-type" className="uq-drop" onChange={(e) => answerState(e.target.value)}>
                         <option value="" selected></option>
-                        <option value="admin">admin</option>
-                        <option value="normal">normal</option>
+                        <option value="legitimate">legitimate</option>
+                        <option value="phishing">phishing</option>
                     </select>
-                    <InputBox inputState={userEmailState} type="text" place="Enter Email..."/>
-                    <InputBox inputState={userPasswordState} type="password" place="Enter Password..."/>
-                    <SubmitBtn clickFunc={createUserHandler} txt="Create User"/>
+                    <SubmitBtn clickFunc={createQuizHandler} txt="Create Quiz"/>
                     <BiX className="close-icon" onClick={(e) => togglePopUp(e)}/>
                     {myError && 
                         <div className="err-msg">{myError}</div>
@@ -130,4 +122,4 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
     )
 }
 
-export default CreateUserPopUp
+export default CreateQuizPopUp

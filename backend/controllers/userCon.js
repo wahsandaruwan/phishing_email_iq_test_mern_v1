@@ -70,7 +70,7 @@ exports.userLogin = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
     try{
         const users = await User.find()
-        console.log(users)
+        // console.log(users)
         res.status(200).json(users)
     }catch(err){
         res.json({errors: {message: err.message}})
@@ -146,5 +146,5 @@ function getLoginRegToken(user){
         firstName: user.firstName,
         lastName: user.lastName,
         userType: user.userType
-    }, process.env.SECRET_KEY, {expiresIn: '10m'})
+    }, process.env.SECRET_KEY, {expiresIn: '1h'})
 }

@@ -8,7 +8,7 @@ exports.authUser = (req, res, next) => {
         if(token){
             try{
                 const user = jwt.verify(token, process.env.SECRET_KEY)
-                console.log(user)
+                // console.log(user)
                 req.user = user
                 return next()
             }catch(err){
@@ -24,7 +24,7 @@ exports.authUser = (req, res, next) => {
 exports.authRole = (roles) => {
     return (req, res, next) => {
         const userRole = req.user.userType
-        console.log("fff"+userRole)
+        // console.log(userRole)
         if(roles.includes(userRole)){
             next()
         }
