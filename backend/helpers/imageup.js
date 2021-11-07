@@ -15,7 +15,7 @@ const fileFilter = (req, file, callback) => {
         callback(null, true)
     }
     else{
-        callback(null, false)
+        return callback(new Error('Only png, jpg, jpeg images are allowed'))
     }
 }
 

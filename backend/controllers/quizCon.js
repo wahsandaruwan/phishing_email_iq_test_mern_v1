@@ -14,33 +14,38 @@ exports.getAllQuizes = async (req, res) => {
 // Add a quiz
 exports.addQuiz = async (req, res) => {
     upload(req, res, async (err) => {
-        // Image errors
+        // Check file errors
         if(err){
             return res.json({errors: {message: err.message}})
         }
-        
-        const {title, quizAns} = req.body
-        const quizImage = req.file.filename
+        else{
+            // Check if a image selected
+            if(req.file){
+                const {title, quizAns} = req.body
+                const quizImage = req.file.filename
 
-        // Check if quiz title already exist
-        const quiz = await Quiz.findOne({title})
-        if(quiz){
-            return res.json({errors: {message: "Quiz title already exist!"}})
-        }
+                // Check if quiz title already exist
+                const quiz = await Quiz.findOne({title})
+                if(quiz){
+                    return res.json({errors: {message: "Quiz title already exist!"}})
+                }
 
-        // Create new quiz
-        const newQuiz = new Quiz({
-            title,
-            quizImage,
-            quizAns
-        })
-        try{
-            console.log("File upload1")
-            await newQuiz.save()
-            res.status(200).json({created: true, success: {message: "Quiz successfully created!"}})
-        }catch(err){
-            console.log("File upload2")
-            res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
+                // Create new quiz
+                const newQuiz = new Quiz({
+                    title,
+                    quizImage,
+                    quizAns
+                })
+                try{
+                    await newQuiz.save()
+                    res.status(200).json({created: true, success: {message: "Quiz successfully created!"}})
+                }catch(err){
+                    res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
+                }
+            }
+            else{
+                return res.json({errors: {message: "Select an image!"}})
+            }
         }
     })
     
@@ -60,25 +65,37 @@ exports.getQuizById = async (req, res) => {
 
 // Update quiz
 exports.updateQuiz = async (req, res) => {
-    upload.single("quizImage")
-    const {quizId} = req.params
-    const {title, quizAns} = req.body
-    const {quizImage} = req.file
-
-    // Check if quiz title already exist
-    const quiz = await Quiz.findOne({title: req.body.title})
-    if(quiz){
-        if(quiz.id !== quizId){
-            return res.json({errors: {message: "Quiz title already exist!"}})
+    upload(req, res, async (err) => {
+        // Check file errors
+        if(err){
+            return res.json({errors: {message: err.message}})
         }
-    }
+        else{
+            if(req.file){
+                const {quizId} = req.params
+                const {title, quizAns} = req.body
+                const {quizImage} = req.file
 
-    try{
-        await Quiz.findOneAndUpdate({_id: quizId}, {title, quizImage, quizAns}, {new: true, runValidators: true})
-        res.status(200).json({created: true, success: {message: "Quiz successfully updated!"}})
-    }catch(err){
-        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
-    }
+                // Check if quiz title already exist
+                const quiz = await Quiz.findOne({title})
+                if(quiz){
+                    if(quiz.id !== quizId){
+                        return res.json({errors: {message: "Quiz title already exist!"}})
+                    }
+                }
+
+                try{
+                    await Quiz.findOneAndUpdate({_id: quizId}, {title, quizImage, quizAns}, {new: true, runValidators: true})
+                    res.status(200).json({created: true, success: {message: "Quiz successfully updated!"}})
+                }catch(err){
+                    res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
+                }
+            }
+            else{
+                return res.json({errors: {message: "Select an image!"}})
+            }
+        }
+    })
 }
 
 // Delete quiz

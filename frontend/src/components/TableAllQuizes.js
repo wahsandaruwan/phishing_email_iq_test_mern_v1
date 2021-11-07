@@ -108,6 +108,7 @@ const TableAllQuizes = () => {
                                     <th>Quiz Title</th>
                                     <th>Quiz Image</th>
                                     <th>Quiz Answer</th>
+                                    <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
@@ -124,6 +125,7 @@ const TableAllQuizes = () => {
                                                 <td>{title}</td>
                                                 <td className="tbl-quiz-img"><img src={"./uploads/" + quizImage}/></td>
                                                 <td>{quizAns}</td>
+                                                <td className="del-td"><a href="#" className="tbl-btn edit" onClick={toggleCreateQuizForm}>Edit</a></td>
                                                 <td className="del-td"><a href="#" className="tbl-btn del" onClick={(e) => quizDeleteHandler(e, _id)}>Delete</a></td>
                                             </tr>
                                         )
