@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const {sendEmail} = require('../helpers/sendmail')
 require('dotenv/config')
 
 // User registration
@@ -30,6 +31,8 @@ exports.userRegistration = async (req, res) => {
     console.log(newUser)
     try{
         await newUser.save()
+        // Send email to user
+        sendEmail(email, "Your Phishing Test Account has been Successfully Created!", password)
         res.status(200).json({created: true, success: {message: "Successfully created a new user!"}})
     }catch(err){
         res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
@@ -92,22 +95,41 @@ exports.getUserById = async (req, res) => {
 exports.updateUser = async (req, res) => {
     const {userId} = req.params
     const {email, password} = req.body
+    let originalPass = ""
 
     // Password hashing
     const hashPass = await bcrypt.hash(password, 8)
 
+    // Get existing user password using id
+    const userById = await User.findOne({ _id: userId })
+    console.log(password)
+    if (userById) {
+        if (password === "") {
+            req.body.password = userById.password
+        }
+        else {
+            originalPass = password
+            // Add hashed password
+            req.body.password = password.length >= 6 ? hashPass : false
+        }
+    }
+
     // Check if email already exist
-    const user = await User.findOne({email})
-    if(user){
-        if(user.id !== userId){
+    const userByEmail = await User.findOne({email})
+    if(userByEmail){
+        if(userByEmail.id !== userId){
             return res.status(403).json({errors: {message: "Email already exist!"}})
         }
     }
 
-    // Add hashed password
-    req.body.password = password.length >= 6 ? hashPass : false
     try{
         await User.findOneAndUpdate({_id: userId}, req.body, {new: true, runValidators: true})
+        // Send email to user
+        if(originalPass){
+            console.log(email)
+            console.log(originalPass)
+            sendEmail(email, "Your Phishing Test Account has been Successfully Updated!", originalPass)
+        }
         res.status(200).json({created: true, success: {message: "User successfully updated!"}})
     }catch(err){
         res.json({errors: {message: Object.entries(err.errors)[0][1].message}})

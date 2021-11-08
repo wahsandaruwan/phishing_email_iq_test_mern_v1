@@ -129,7 +129,6 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp, selectedUserId}) => {
                 setLastName(data.lastName)
                 setUserType(data.userType)
                 setEmail(data.email)
-                setPassword(data.password)
             }
         } catch (err) {
             console.log(err)
@@ -206,7 +205,7 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp, selectedUserId}) => {
                         <option value="normal">normal</option>
                     </select>
                     <InputBox inputState={userEmailState} type="text" place="Enter Email..." defaultValue={email}/>
-                    <InputBox inputState={userPasswordState} type="password" place="Enter Password..." defaultValue={password}/>
+                    <InputBox inputState={userPasswordState} type="password" place="Enter Password..."/>
                     <SubmitBtn clickFunc={!selectedUserId ? createUserHandler : updateUserHandler} txt={!selectedUserId ? "Create User" : "Update User"}/>
                     <BiX className="close-icon" onClick={(e) => togglePopUp(e)}/>
                     {myError && 

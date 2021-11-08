@@ -11,22 +11,27 @@ exports.getAllQuizes = async (req, res) => {
 
         // Delete extra images in the dir
         fs.readdir("../frontend/public/uploads/", (err, files) => {
-            files.forEach(async (file) => {
-                let available = false
-                quizes.map((obj) => {
-                    if(file === obj.quizImage){
-                        console.log(file+" | "+obj.quizImage)
-                        available = true
+            if(err){
+                console.log(err.message)
+            }
+            else{
+                files.forEach(async (file) => {
+                    let available = false
+                    quizes.map((obj) => {
+                        if(file === obj.quizImage){
+                            console.log(file+" | "+obj.quizImage)
+                            available = true
+                        }
+                    })
+                    if(!available){
+                        try {
+                            await deleteImage(`../frontend/public/uploads/${file}`)
+                        } catch (err) {
+                            console.log(err.message)
+                        }
                     }
                 })
-                if(!available){
-                    try {
-                        await deleteImage(`../frontend/public/uploads/${file}`)
-                    } catch (err) {
-                        console.log(err.message)
-                    }
-                }
-            })
+            }
         })
         res.status(200).json(quizes)
     } catch (err) {
