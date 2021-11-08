@@ -1,16 +1,36 @@
 const Quiz = require('../models/Quiz')
-const {upload} = require('../helpers/imageup')
+const { upload } = require('../helpers/imageup')
 const fs = require('fs')
 const { promisify } = require('util')
 const deleteImage = promisify(fs.unlink)
 
 // Get all quizes
 exports.getAllQuizes = async (req, res) => {
-    try{
+    try {
         const quizes = await Quiz.find()
+
+        // Delete extra images in the dir
+        fs.readdir("../frontend/public/uploads/", (err, files) => {
+            files.forEach(async (file) => {
+                let available = false
+                quizes.map((obj) => {
+                    if(file === obj.quizImage){
+                        console.log(file+" | "+obj.quizImage)
+                        available = true
+                    }
+                })
+                if(!available){
+                    try {
+                        await deleteImage(`../frontend/public/uploads/${file}`)
+                    } catch (err) {
+                        console.log(err.message)
+                    }
+                }
+            })
+        })
         res.status(200).json(quizes)
-    }catch(err){
-        res.json({errors: {message: err.message}})
+    } catch (err) {
+        res.json({ errors: { message: err.message } })
     }
 }
 
@@ -18,19 +38,19 @@ exports.getAllQuizes = async (req, res) => {
 exports.addQuiz = async (req, res) => {
     upload(req, res, async (err) => {
         // Check file errors
-        if(err){
-            return res.json({errors: {message: err.message}})
+        if (err) {
+            return res.json({ errors: { message: err.message } })
         }
-        else{
+        else {
             // Check if a image selected
-            if(req.file){
-                const {title, quizAns} = req.body
+            if (req.file) {
+                const { title, quizAns } = req.body
                 const quizImage = req.file.filename
 
                 // Check if quiz title already exist
-                const quizByTitle = await Quiz.findOne({title})
-                if(quizByTitle){
-                    return res.json({errors: {message: "Quiz title already exist!"}})
+                const quizByTitle = await Quiz.findOne({ title })
+                if (quizByTitle) {
+                    return res.json({ errors: { message: "Quiz title already exist!" } })
                 }
 
                 // Create new quiz
@@ -39,30 +59,30 @@ exports.addQuiz = async (req, res) => {
                     quizImage,
                     quizAns
                 })
-                try{
+                try {
                     await newQuiz.save()
-                    res.status(200).json({created: true, success: {message: "Quiz successfully created!"}})
-                }catch(err){
-                    res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
+                    res.status(200).json({ created: true, success: { message: "Quiz successfully created!" } })
+                } catch (err) {
+                    res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
                 }
             }
-            else{
-                return res.json({errors: {message: "Select an image!"}})
+            else {
+                return res.json({ errors: { message: "Select an image!" } })
             }
         }
     })
-    
+
 }
 
 // Get quiz by id
 exports.getQuizById = async (req, res) => {
-    const {quizId} = req.params
+    const { quizId } = req.params
 
-    try{
+    try {
         const quiz = await Quiz.findById(quizId)
         res.status(200).json(quiz)
-    }catch(err){
-        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
+    } catch (err) {
+        res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
     }
 }
 
@@ -70,44 +90,44 @@ exports.getQuizById = async (req, res) => {
 exports.updateQuiz = async (req, res) => {
     upload(req, res, async (err) => {
         // Check file errors
-        if(err){
-            return res.json({errors: {message: err.message}})
+        if (err) {
+            return res.json({ errors: { message: err.message } })
         }
-        else{
-            const {quizId} = req.params
-            const {title, quizAns} = req.body
+        else {
+            const { quizId } = req.params
+            const { title, quizAns } = req.body
             let quizImage = ""
 
             // Get existing quiz image name using id
-            const quizById = await Quiz.findOne({_id: quizId})
-            if(quizById){
-                if(req.file){
+            const quizById = await Quiz.findOne({ _id: quizId })
+            if (quizById) {
+                if (req.file) {
                     quizImage = req.file.filename
                     // Delete existing image
-                    try{
+                    try {
                         await deleteImage(`../frontend/public/uploads/${quizById.quizImage}`)
-                    }catch(err){
+                    } catch (err) {
                         console.log(err.message)
                     }
                 }
-                else{
+                else {
                     quizImage = quizById.quizImage
                 }
             }
 
             // Check if quiz title already exist
-            const quizByTitle = await Quiz.findOne({title})
-            if(quizByTitle){
-                if(quizByTitle.id !== quizId){
-                    return res.json({errors: {message: "Quiz title already exist!"}})
+            const quizByTitle = await Quiz.findOne({ title })
+            if (quizByTitle) {
+                if (quizByTitle.id !== quizId) {
+                    return res.json({ errors: { message: "Quiz title already exist!" } })
                 }
             }
 
-            try{
-                await Quiz.findOneAndUpdate({_id: quizId}, {title, quizImage, quizAns}, {new: true, runValidators: true})
-                res.status(200).json({created: true, success: {message: "Quiz successfully updated!"}})
-            }catch(err){
-                res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
+            try {
+                await Quiz.findOneAndUpdate({ _id: quizId }, { title, quizImage, quizAns }, { new: true, runValidators: true })
+                res.status(200).json({ created: true, success: { message: "Quiz successfully updated!" } })
+            } catch (err) {
+                res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
             }
         }
     })
@@ -115,34 +135,34 @@ exports.updateQuiz = async (req, res) => {
 
 // Delete quiz
 exports.deleteQuiz = async (req, res) => {
-    const {quizId} = req.params
+    const { quizId } = req.params
 
     // Get existing quiz image name using id
-    const quizById = await Quiz.findOne({_id: quizId})
-    if(quizById){
+    const quizById = await Quiz.findOne({ _id: quizId })
+    if (quizById) {
         // Delete existing image
-        try{
+        try {
             await deleteImage(`../frontend/public/uploads/${quizById.quizImage}`)
-        }catch(err){
+        } catch (err) {
             console.log(err.message)
         }
     }
 
-    try{
+    try {
         await Quiz.findByIdAndDelete(quizId)
-        res.status(200).json({created: true, success: {message: "Quiz successfully deleted!"}})
-    }catch(err){
-        res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
+        res.status(200).json({ created: true, success: { message: "Quiz successfully deleted!" } })
+    } catch (err) {
+        res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
     }
 }
 
 // Get quizes by searching
 exports.getQuizBySearch = async (req, res) => {
-    try{
+    try {
         const regexQuery = new RegExp(req.params.query, 'i')
-        const quizes = await Quiz.find({$or: [{title: regexQuery}, {quizAns: regexQuery}]})
+        const quizes = await Quiz.find({ $or: [{ title: regexQuery }, { quizAns: regexQuery }] })
         res.status(200).json(quizes)
-    }catch(err){
-        res.status(403).json({errors: {message: err.message}})
+    } catch (err) {
+        res.status(403).json({ errors: { message: err.message } })
     }
 }
