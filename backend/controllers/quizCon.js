@@ -117,6 +117,17 @@ exports.updateQuiz = async (req, res) => {
 exports.deleteQuiz = async (req, res) => {
     const {quizId} = req.params
 
+    // Get existing quiz image name using id
+    const quizById = await Quiz.findOne({_id: quizId})
+    if(quizById){
+        // Delete existing image
+        try{
+            await deleteImage(`../frontend/public/uploads/${quizById.quizImage}`)
+        }catch(err){
+            console.log(err.message)
+        }
+    }
+
     try{
         await Quiz.findByIdAndDelete(quizId)
         res.status(200).json({created: true, success: {message: "Quiz successfully deleted!"}})
