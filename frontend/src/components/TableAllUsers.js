@@ -12,6 +12,9 @@ const TableAllUsers = () => {
     // Users state
     const [users, setUsers] = useState([])
 
+    // Clicked user state
+    const [clikedUser, setClickedUser] = useState("")
+
     // Set history
     const history = useHistory()
 
@@ -108,6 +111,7 @@ const TableAllUsers = () => {
                                     <th>Last Name</th>
                                     <th>User Type</th>
                                     <th>Email</th>
+                                    <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
@@ -125,6 +129,10 @@ const TableAllUsers = () => {
                                                 <td>{lastName}</td>
                                                 <td>{userType}</td>
                                                 <td>{email}</td>
+                                                <td className="del-td"><a href="#" className="tbl-btn edit" onClick={(e) => {
+                                                    toggleCreateUserForm(e)
+                                                    setClickedUser(_id)
+                                                }}>Edit</a></td>
                                                 <td className="del-td"><a href="#" className="tbl-btn del" onClick={(e) => userDeleteHandler(e, _id)}>Delete</a></td>
                                             </tr>
                                         )
@@ -136,7 +144,7 @@ const TableAllUsers = () => {
                 )}
             </section>
             {
-                showCreateUser && <CreateUserPopUp refreshUserTable={userFetchhandler} togglePopUp={toggleCreateUserForm}/>
+                showCreateUser && <CreateUserPopUp selectedUserId={clikedUser} refreshUserTable={userFetchhandler} togglePopUp={toggleCreateUserForm}/>
             }
         </>
     )

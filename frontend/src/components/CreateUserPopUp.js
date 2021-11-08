@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 import { useHistory } from "react-router-dom"
 
@@ -6,15 +6,17 @@ import { BiX } from "react-icons/bi"
 import InputBox from "./InputBox"
 import SubmitBtn from "./SubmitBtn"
 
-const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
+const CreateUserPopUp = ({refreshUserTable, togglePopUp, selectedUserId}) => {
     // New user states
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [userType, setUserType] = useState("")
-    const [userEmail, setUserEmail] = useState("")
-    const [userPassword, setUserPassword] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const [myError, setMyError] = useState("")
     const [mySuccess, setMySuccess] = useState("")
+
+    console.log(selectedUserId)
 
     // Set history
     const history = useHistory()
@@ -40,12 +42,12 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
     
     // Update user email state
     const userEmailState = (newValue) => {
-        setUserEmail(newValue)
+        setEmail(newValue)
     }
 
     // Update user password state
     const userPasswordState = (newValue) => {
-        setUserPassword(newValue)
+        setPassword(newValue)
     }
 
     // Configurations
@@ -55,6 +57,10 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
             "Authorization": `Bearer ${token}`
         }
     }
+
+    const configCommon = {
+        headers: { "Authorization": `Bearer ${token}` }
+    };
 
     // Create user handler
     const createUserHandler = async (e) => {
@@ -68,8 +74,90 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
                     firstName,
                     lastName,
                     userType,
-                    userEmail,
-                    userPassword
+                    email,
+                    password
+                },
+                configPost
+            )
+
+            if(data.created){
+                setMyError("")
+                setMySuccess(data.success.message)
+                setTimeout(() => { 
+                    togglePopUp(e)
+                }, 2000)
+                // Refresh user table
+                refreshUserTable()
+            }
+            else{
+                if(data.authEx){
+                    setMySuccess("")
+                    setMyError(data.errors.message)
+                    setTimeout(() => { 
+                        // Clear local storage and navigate to login page
+                        localStorage.clear()
+                        history.push("/")
+                    }, 5000)
+                }
+                else{
+                    throw Error(data.errors.message)
+                }
+            }
+        }catch(err){
+            console.log(err)
+            setMySuccess("")
+            setMyError(err.message)
+        }
+    }
+
+    // Get one user handler
+    const getOneUserHandler = async () => {
+        try {
+            const {data} = await axios.get(
+                `http://localhost:3300/api/users/${selectedUserId}`,
+                configCommon
+            )
+            if(data.authEx){
+                alert(data.errors.message)
+                // Clear local storage and navigate to login page
+                localStorage.clear()
+                history.push("/")
+            }
+            else{
+                console.log(data)
+                setFirstName(data.firstName)
+                setLastName(data.lastName)
+                setUserType(data.userType)
+                setEmail(data.email)
+                setPassword(data.password)
+            }
+        } catch (err) {
+            console.log(err)
+            setMySuccess("")
+            setMyError(err.message)
+        }
+    }
+
+    useEffect(() => {
+        if(selectedUserId){
+            getOneUserHandler()
+        }
+    }, [])
+
+    // Update user handler
+    const updateUserHandler = async (e) => {
+        e.preventDefault()
+
+        // Api call
+        try{
+            const {data} = await axios.put(
+                `http://localhost:3300/api/users/${selectedUserId}`,
+                {
+                    firstName,
+                    lastName,
+                    userType,
+                    email,
+                    password
                 },
                 configPost
             )
@@ -109,17 +197,17 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
             <section className="popup">
                 <div className="overlay" onClick={(e) => togglePopUp(e)}></div>
                 <form className="popup-form">
-                    <h2>Create a New User</h2>
-                    <InputBox inputState={firstNameState} type="text" place="Enter First Name..."/>
-                    <InputBox inputState={lastNameState} type="text" place="Enter First Name..."/>
-                    <select id="user-type" className="uq-drop" onChange={(e) => userTypeState(e.target.value)}>
+                    <h2>{!selectedUserId ? "Create a New User" : "Edit User"}</h2>
+                    <InputBox inputState={firstNameState} type="text" place="Enter First Name..." defaultValue={firstName}/>
+                    <InputBox inputState={lastNameState} type="text" place="Enter First Name..." defaultValue={lastName}/>
+                    <select id="user-type" className="uq-drop" onChange={(e) => userTypeState(e.target.value)} value={!selectedUserId ? null : userType}>
                         <option value="" selected></option>
                         <option value="admin">admin</option>
                         <option value="normal">normal</option>
                     </select>
-                    <InputBox inputState={userEmailState} type="text" place="Enter Email..."/>
-                    <InputBox inputState={userPasswordState} type="password" place="Enter Password..."/>
-                    <SubmitBtn clickFunc={createUserHandler} txt="Create User"/>
+                    <InputBox inputState={userEmailState} type="text" place="Enter Email..." defaultValue={email}/>
+                    <InputBox inputState={userPasswordState} type="password" place="Enter Password..." defaultValue={password}/>
+                    <SubmitBtn clickFunc={!selectedUserId ? createUserHandler : updateUserHandler} txt={!selectedUserId ? "Create User" : "Update User"}/>
                     <BiX className="close-icon" onClick={(e) => togglePopUp(e)}/>
                     {myError && 
                         <div className="err-msg">{myError}</div>

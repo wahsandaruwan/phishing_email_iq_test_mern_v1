@@ -5,28 +5,27 @@ require('dotenv/config')
 
 // User registration
 exports.userRegistration = async (req, res) => {
-    const {firstName, lastName, userType, userEmail, userPassword} = req.body
+    const {firstName, lastName, userType, email, password} = req.body
 
     // Password hashing
-    console.log(userPassword)
-    const hashPass = await bcrypt.hash(userPassword, 8)
+    const hashPass = await bcrypt.hash(password, 8)
 
     // Check if email already exist
-    const user = await User.findOne({email: userEmail})
+    const user = await User.findOne({email})
     if(user){
         return res.json({errors: {message: "Email already exist!"}})
     }
 
     // Add hashed password
-    req.body.userPassword = userPassword.length >= 6 ? hashPass : false
+    req.body.password = password.length >= 6 ? hashPass : false
 
     // Create a new user
     const newUser = new User({
-        firstName : firstName, 
-        lastName : lastName, 
-        userType : userType, 
-        email : userEmail, 
-        password : userPassword
+        firstName, 
+        lastName, 
+        userType, 
+        email, 
+        password
     })
     console.log(newUser)
     try{
