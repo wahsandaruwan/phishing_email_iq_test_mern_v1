@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
-import { useHistory } from "react-router-dom"
+import { useHistory,} from "react-router-dom"
 
 import { BiX } from "react-icons/bi"
 import InputBox from "./InputBox"
@@ -63,9 +63,11 @@ const CreateQuizPopUp = ({refreshQuizTable, togglePopUp, selectedQuizId}) => {
 
         // Api call
         try{
-            const {data} = await axios.post('http://localhost:3300/api/quizes/',
-            formData,
-            configPost)
+            const {data} = await axios.post(
+                'http://localhost:3300/api/quizes/',
+                formData,
+                configPost
+            )
 
             if(data.created){
                 setMyError("")
@@ -122,13 +124,58 @@ const CreateQuizPopUp = ({refreshQuizTable, togglePopUp, selectedQuizId}) => {
         }
     }
 
-    if(selectedQuizId){
-        getOneQuizHandler()
-    }
+    useEffect(() => {
+        if(selectedQuizId){
+            getOneQuizHandler()
+        }
+    }, [])
 
     // Update quiz handler
-    const updateQuizHandler = () => {
-        
+    const updateQuizHandler = async (e) => {
+        e.preventDefault()
+
+        // Set form data
+        const formData = new FormData()
+        formData.append("title", title)
+        formData.append("quizImage", quizImage)
+        formData.append("quizAns", quizAns)
+
+        // Api call
+        try{
+            const {data} = await axios.put(
+                `http://localhost:3300/api/quizes/${selectedQuizId}`,
+                formData,
+                configPost
+            )
+
+            if(data.created){
+                setMyError("")
+                setMySuccess(data.success.message)
+                setTimeout(() => { 
+                    togglePopUp(e)
+                }, 2000)
+                // Refresh user table
+                refreshQuizTable()
+            }
+            else{
+                if(data.authEx){
+                    setMySuccess("")
+                    setMyError(data.errors.message)
+                    setTimeout(() => { 
+                        // Clear local storage and navigate to login page
+                        localStorage.clear()
+                        history.push("/")
+                    }, 5000)
+                }
+                else{
+                    throw Error(data.errors.message)
+                }
+            }
+        }catch(err){
+            console.log(err)
+            setMySuccess("")
+            setMyError(err.message)
+        }
     }
 
     return (
@@ -139,12 +186,12 @@ const CreateQuizPopUp = ({refreshQuizTable, togglePopUp, selectedQuizId}) => {
                     <h2>{!selectedQuizId ? "Create a New Quiz" : "Edit Quiz"}</h2>
                     <InputBox inputState={titleState} type="text" place="Enter Quiz Title..." defaultValue={title}/>
                     <input className="file-up" type="file" onChange={(e) => imageState(e.target.files[0])}/>
-                    <select id="user-type" className="uq-drop" onChange={(e) => answerState(e.target.value)} value={!selectedQuizId ? "" : quizAns}>
+                    <select id="user-type" className="uq-drop" onChange={(e) => answerState(e.target.value)} value={!selectedQuizId ? null : quizAns}>
                         <option value=""></option>
                         <option value="legitimate">legitimate</option>
                         <option value="phishing">phishing</option>
                     </select>
-                    <SubmitBtn clickFunc={createQuizHandler} txt={!selectedQuizId ? "Create Quiz" : "Update Quiz"}/>
+                    <SubmitBtn clickFunc={!selectedQuizId ? createQuizHandler : updateQuizHandler} txt={!selectedQuizId ? "Create Quiz" : "Update Quiz"}/>
                     <BiX className="close-icon" onClick={(e) => togglePopUp(e)}/>
                     {myError && 
                         <div className="err-msg">{myError}</div>
@@ -156,6 +203,10 @@ const CreateQuizPopUp = ({refreshQuizTable, togglePopUp, selectedQuizId}) => {
             </section>
         </>
     )
+}
+
+CreateQuizPopUp.defaultProps = {
+    selectedQuizId: ""
 }
 
 export default CreateQuizPopUp

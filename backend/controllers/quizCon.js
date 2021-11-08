@@ -1,5 +1,8 @@
 const Quiz = require('../models/Quiz')
 const {upload} = require('../helpers/imageup')
+const fs = require('fs')
+const { promisify } = require('util')
+const deleteImage = promisify(fs.unlink)
 
 // Get all quizes
 exports.getAllQuizes = async (req, res) => {
@@ -25,8 +28,8 @@ exports.addQuiz = async (req, res) => {
                 const quizImage = req.file.filename
 
                 // Check if quiz title already exist
-                const quiz = await Quiz.findOne({title})
-                if(quiz){
+                const quizByTitle = await Quiz.findOne({title})
+                if(quizByTitle){
                     return res.json({errors: {message: "Quiz title already exist!"}})
                 }
 
@@ -71,28 +74,40 @@ exports.updateQuiz = async (req, res) => {
             return res.json({errors: {message: err.message}})
         }
         else{
-            if(req.file){
-                const {quizId} = req.params
-                const {title, quizAns} = req.body
-                const {quizImage} = req.file
+            const {quizId} = req.params
+            const {title, quizAns} = req.body
+            let quizImage = ""
 
-                // Check if quiz title already exist
-                const quiz = await Quiz.findOne({title})
-                if(quiz){
-                    if(quiz.id !== quizId){
-                        return res.json({errors: {message: "Quiz title already exist!"}})
+            // Get existing quiz image name using id
+            const quizById = await Quiz.findOne({_id: quizId})
+            if(quizById){
+                if(req.file){
+                    quizImage = req.file.filename
+                    // Delete existing image
+                    try{
+                        await deleteImage(`../frontend/public/uploads/${quizById.quizImage}`)
+                    }catch(err){
+                        console.log(err.message)
                     }
                 }
-
-                try{
-                    await Quiz.findOneAndUpdate({_id: quizId}, {title, quizImage, quizAns}, {new: true, runValidators: true})
-                    res.status(200).json({created: true, success: {message: "Quiz successfully updated!"}})
-                }catch(err){
-                    res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
+                else{
+                    quizImage = quizById.quizImage
                 }
             }
-            else{
-                return res.json({errors: {message: "Select an image!"}})
+
+            // Check if quiz title already exist
+            const quizByTitle = await Quiz.findOne({title})
+            if(quizByTitle){
+                if(quizByTitle.id !== quizId){
+                    return res.json({errors: {message: "Quiz title already exist!"}})
+                }
+            }
+
+            try{
+                await Quiz.findOneAndUpdate({_id: quizId}, {title, quizImage, quizAns}, {new: true, runValidators: true})
+                res.status(200).json({created: true, success: {message: "Quiz successfully updated!"}})
+            }catch(err){
+                res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
             }
         }
     })

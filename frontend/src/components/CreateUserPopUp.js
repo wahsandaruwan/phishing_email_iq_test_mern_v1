@@ -62,14 +62,17 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
 
         // Api call
         try{
-            const {data} = await axios.post('http://localhost:3300/api/users/register', {
-                firstName,
-                lastName,
-                userType,
-                userEmail,
-                userPassword
-            },
-            configPost)
+            const {data} = await axios.post(
+                'http://localhost:3300/api/users/register', 
+                {
+                    firstName,
+                    lastName,
+                    userType,
+                    userEmail,
+                    userPassword
+                },
+                configPost
+            )
 
             if(data.created){
                 setMyError("")
