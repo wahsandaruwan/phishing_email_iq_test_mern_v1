@@ -6,13 +6,15 @@ import { BiX } from "react-icons/bi"
 import InputBox from "./InputBox"
 import SubmitBtn from "./SubmitBtn"
 
-const CreateQuizPopUp = ({refreshQuizTable, togglePopUp}) => {
+const CreateQuizPopUp = ({refreshQuizTable, togglePopUp, selectedQuizId}) => {
     // New quiz states
     const [title, setTitle] = useState("")
     const [quizImage, setQuizImage] = useState("")
     const [quizAns, setQuizAns] = useState("")
     const [myError, setMyError] = useState("")
     const [mySuccess, setMySuccess] = useState("")
+
+    console.log(selectedQuizId)
 
     // Set history
     const history = useHistory()
@@ -37,9 +39,17 @@ const CreateQuizPopUp = ({refreshQuizTable, togglePopUp}) => {
         setQuizAns(newValue)
     }
 
-    const createQuizHandler1 = (e) => {
-        e.preventDefault()
+    // Configurations
+    const configPost = {
+        headers: {
+            "Content-type": `multipart/form-data`,
+            "Authorization": `Bearer ${token}`
+        }
     }
+
+    const configCommon = {
+        headers: { "Authorization": `Bearer ${token}` }
+    };
 
     // Create quiz handler
     const createQuizHandler = async (e) => {
@@ -51,19 +61,11 @@ const CreateQuizPopUp = ({refreshQuizTable, togglePopUp}) => {
         formData.append("quizImage", quizImage)
         formData.append("quizAns", quizAns)
 
-        // Configurations
-        const config = {
-            headers: {
-                "Content-type": "multipart/form-data",
-                "Authorization": "Bearer "+token
-            }
-        }
-
         // Api call
         try{
             const {data} = await axios.post('http://localhost:3300/api/quizes/',
             formData,
-            config)
+            configPost)
 
             if(data.created){
                 setMyError("")
@@ -95,20 +97,54 @@ const CreateQuizPopUp = ({refreshQuizTable, togglePopUp}) => {
         }
     }
 
+    // Get one quiz handler
+    const getOneQuizHandler = async () => {
+        try {
+            const {data} = await axios.get(
+                `http://localhost:3300/api/quizes/${selectedQuizId}`,
+                configCommon
+            )
+            if(data.authEx){
+                alert(data.errors.message)
+                // Clear local storage and navigate to login page
+                localStorage.clear()
+                history.push("/")
+            }
+            else{
+                setTitle(data.title)
+                setQuizImage(data.quizImage)
+                setQuizAns(data.quizAns)
+            }
+        } catch (err) {
+            console.log(err)
+            setMySuccess("")
+            setMyError(err.message)
+        }
+    }
+
+    if(selectedQuizId){
+        getOneQuizHandler()
+    }
+
+    // Update quiz handler
+    const updateQuizHandler = () => {
+        
+    }
+
     return (
         <>
             <section className="popup">
                 <div className="overlay" onClick={(e) => togglePopUp(e)}></div>
                 <form className="popup-form">
-                    <h2>Create a New Quiz</h2>
-                    <InputBox inputState={titleState} type="text" place="Enter Quiz Title..."/>
+                    <h2>{!selectedQuizId ? "Create a New Quiz" : "Edit Quiz"}</h2>
+                    <InputBox inputState={titleState} type="text" place="Enter Quiz Title..." defaultValue={title}/>
                     <input className="file-up" type="file" onChange={(e) => imageState(e.target.files[0])}/>
-                    <select id="user-type" className="uq-drop" onChange={(e) => answerState(e.target.value)}>
-                        <option value="" selected></option>
+                    <select id="user-type" className="uq-drop" onChange={(e) => answerState(e.target.value)} value={!selectedQuizId ? "" : quizAns}>
+                        <option value=""></option>
                         <option value="legitimate">legitimate</option>
                         <option value="phishing">phishing</option>
                     </select>
-                    <SubmitBtn clickFunc={createQuizHandler} txt="Create Quiz"/>
+                    <SubmitBtn clickFunc={createQuizHandler} txt={!selectedQuizId ? "Create Quiz" : "Update Quiz"}/>
                     <BiX className="close-icon" onClick={(e) => togglePopUp(e)}/>
                     {myError && 
                         <div className="err-msg">{myError}</div>

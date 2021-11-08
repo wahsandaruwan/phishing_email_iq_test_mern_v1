@@ -21,8 +21,8 @@ const TableAllUsers = () => {
     console.log(token)
 
     // Create config with token
-    const config = {
-        headers: { Authorization: `Bearer ${token}` }
+    const configCommon = {
+        headers: { "Authorization": `Bearer ${token}` }
     };
 
     // Fetching user handler
@@ -30,7 +30,7 @@ const TableAllUsers = () => {
         try {
             const {data} = await axios.get(
                 `http://localhost:3300/api/users/`,
-                config
+                configCommon
             )
             if(data.authEx){
                 alert(data.errors.message)
@@ -65,7 +65,7 @@ const TableAllUsers = () => {
             try {
                 const {data} = await axios.delete(
                     `http://localhost:3300/api/users/${userId}`,
-                    config
+                    configCommon
                 )
                 if(data.created){
                     alert(data.success.message)

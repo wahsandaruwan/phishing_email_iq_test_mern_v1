@@ -12,6 +12,9 @@ const TableAllQuizes = () => {
     // Users state
     const [quizes, setQuizes] = useState([])
 
+    // Clicked quiz state
+    const [clikedQuiz, setClickedQuiz] = useState("")
+
     // Set history
     const history = useHistory()
 
@@ -21,8 +24,8 @@ const TableAllQuizes = () => {
     console.log(token)
 
     // Create config with token
-    const config = {
-        headers: { Authorization: `Bearer ${token}` }
+    const configCommon = {
+        headers: { "Authorization": `Bearer ${token}` }
     };
 
     // Fetching quizes handler
@@ -30,7 +33,7 @@ const TableAllQuizes = () => {
         try {
             const {data} = await axios.get(
                 `http://localhost:3300/api/quizes/`,
-                config
+                configCommon
             )
             if(data.authEx){
                 alert(data.errors.message)
@@ -55,6 +58,9 @@ const TableAllQuizes = () => {
     const toggleCreateQuizForm = (e) => {
         e.preventDefault()
         setShowCreateQuiz(!showCreateQuiz)
+        if(clikedQuiz){
+            setClickedQuiz("")
+        }
         console.log(showCreateQuiz)
     }
 
@@ -66,7 +72,7 @@ const TableAllQuizes = () => {
             try {
                 const {data} = await axios.delete(
                     `http://localhost:3300/api/quizes/${quizId}`,
-                    config
+                    configCommon
                 )
                 if(data.created){
                     alert(data.success.message)
@@ -125,7 +131,10 @@ const TableAllQuizes = () => {
                                                 <td>{title}</td>
                                                 <td className="tbl-quiz-img"><img src={"./uploads/" + quizImage}/></td>
                                                 <td>{quizAns}</td>
-                                                <td className="del-td"><a href="#" className="tbl-btn edit" onClick={toggleCreateQuizForm}>Edit</a></td>
+                                                <td className="del-td"><a href="#" className="tbl-btn edit" onClick={(e) => {
+                                                    toggleCreateQuizForm(e)
+                                                    setClickedQuiz(_id)
+                                                }}>Edit</a></td>
                                                 <td className="del-td"><a href="#" className="tbl-btn del" onClick={(e) => quizDeleteHandler(e, _id)}>Delete</a></td>
                                             </tr>
                                         )
@@ -137,7 +146,7 @@ const TableAllQuizes = () => {
                 )}
             </section>
             {
-                showCreateQuiz && <CreateQuizPopUp refreshQuizTable={quizFetchhandler} togglePopUp={toggleCreateQuizForm}/>
+                showCreateQuiz && <CreateQuizPopUp selectedQuizId={clikedQuiz} refreshQuizTable={quizFetchhandler} togglePopUp={toggleCreateQuizForm}/>
             }
         </>
     )

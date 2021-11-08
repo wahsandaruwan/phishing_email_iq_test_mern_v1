@@ -48,17 +48,17 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
         setUserPassword(newValue)
     }
 
+    // Configurations
+    const configPost = {
+        headers: {
+            "Content-type": `application/json`,
+            "Authorization": `Bearer ${token}`
+        }
+    }
+
     // Create user handler
     const createUserHandler = async (e) => {
         e.preventDefault()
-
-        // Configurations
-        const config = {
-            headers: {
-                "Content-type": "application/json",
-                "Authorization": "Bearer "+token
-            }
-        }
 
         // Api call
         try{
@@ -69,7 +69,7 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp}) => {
                 userEmail,
                 userPassword
             },
-            config)
+            configPost)
 
             if(data.created){
                 setMyError("")
