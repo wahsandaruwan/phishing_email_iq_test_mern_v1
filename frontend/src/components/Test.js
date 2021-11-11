@@ -49,7 +49,7 @@ const Test = () => {
     // Quiz reset handler
     const resetClickHandler = (e) => {
         e.preventDefault()
-        
+
         setStep(2)
         setActiveQuestion(0)
         setAnswers([])
@@ -117,7 +117,7 @@ const Test = () => {
                     results={answers}
                     data={quizes}
                     onReset={resetClickHandler}
-                    time={time}
+                    timeDuration={time}
                 />}
             </section>
         </>
