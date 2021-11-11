@@ -8,8 +8,6 @@ const TableUserAllTests = () => {
     // Tests state
     const [tests, setTests] = useState([])
 
-    console.log(tests)
-
     // Set history
     const history = useHistory()
 

@@ -42,9 +42,6 @@ const TableAllQuizes = () => {
                 history.push("/")
             }
             else{
-                // console.log(data)
-                // const cloneData = [...data]
-                // console.log(shuffleArray(cloneData))
                 setQuizes(data)
             }
         } catch (err) {
