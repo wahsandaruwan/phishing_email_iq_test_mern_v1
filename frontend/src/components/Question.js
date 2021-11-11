@@ -3,7 +3,7 @@ import SubmitBtn from "../components/SubmitBtn"
 
 import {useState, useEffect, useRef} from 'react'
 
-const Question = ({data, onAnswerUpdate, numOfQuestions, activeQuestion, onSetActiveQuestion, onSetStep}) => {
+const Question = ({data, onAnswerUpdate, numOfQuestions, activeQuestion, onSetActiveQuestion, onSetStep, setProgress}) => {
     // Current question state
     const [selected, setSelected] = useState('')
     const [error, setError] = useState('')
@@ -39,6 +39,7 @@ const Question = ({data, onAnswerUpdate, numOfQuestions, activeQuestion, onSetAc
         setSelected('')
         if(activeQuestion < numOfQuestions - 1){
             onSetActiveQuestion(activeQuestion + 1)
+            setProgress()
         }
         else{
             onSetStep(3)
