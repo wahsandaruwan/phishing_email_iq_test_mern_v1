@@ -5,6 +5,7 @@ import QuizStart from "./QuizStart";
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useHistory } from "react-router-dom"
+import TestEnd from "./TestEnd";
 
 let interval
 const Test = () => {
@@ -30,7 +31,7 @@ const Test = () => {
 
     // Clear interval
     useEffect(() => {
-        if(step === 2){
+        if(step === 3){
             clearInterval(interval)
         }
     }, [step])
@@ -46,7 +47,9 @@ const Test = () => {
     }
 
     // Quiz reset handler
-    const resetClickHandler = () => {
+    const resetClickHandler = (e) => {
+        e.preventDefault()
+        
         setStep(2)
         setActiveQuestion(0)
         setAnswers([])
@@ -109,6 +112,12 @@ const Test = () => {
                     activeQuestion={activeQuestion}
                     onSetActiveQuestion={setActiveQuestion}
                     onSetStep={setStep}
+                />}
+                {step === 3 && <TestEnd
+                    results={answers}
+                    data={quizes}
+                    onReset={resetClickHandler}
+                    time={time}
                 />}
             </section>
         </>

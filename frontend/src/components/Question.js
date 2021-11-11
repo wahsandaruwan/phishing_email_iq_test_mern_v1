@@ -35,7 +35,7 @@ const Question = ({data, onAnswerUpdate, numOfQuestions, activeQuestion, onSetAc
         if(selected === ''){
             return setError('Please select an answer!')
         }
-        onAnswerUpdate((prevState) => [...prevState, {q: data.question, a: selected}])
+        onAnswerUpdate((prevState) => [...prevState, {q: data.title, a: selected}])
         setSelected('')
         if(activeQuestion < numOfQuestions - 1){
             onSetActiveQuestion(activeQuestion + 1)

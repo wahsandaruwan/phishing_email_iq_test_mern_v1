@@ -313,8 +313,21 @@ th{
 }
 
 /* Quiz start */
-.test .quiz-start{
-    width: 200px;
+.test .quiz-start-end{
+    text-align: center;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.test .quiz-start-end div{
+    max-width: 200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.test .quiz-start-end p{
+    font-size: 1.2rem;
+    margin: 15px 0;
 }
 
 /* Heading */
