@@ -57,8 +57,8 @@ const TableAllTests = () => {
                                     <th>#</th>
                                     <th>ID</th>
                                     <th>User Email</th>
-                                    <th>Creation Date</th>
-                                    <th>Creation Time</th>
+                                    <th>Test Date</th>
+                                    <th>Test Time</th>
                                     <th>Time Duration</th>
                                     <th>Marks</th>
                                     <th>Recommendation</th>

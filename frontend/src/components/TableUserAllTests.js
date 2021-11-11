@@ -8,8 +8,7 @@ const TableUserAllTests = () => {
     // Tests state
     const [tests, setTests] = useState([])
 
-    // Test count
-    let num = 0;
+    console.log(tests)
 
     // Set history
     const history = useHistory()
@@ -17,7 +16,9 @@ const TableUserAllTests = () => {
     // Token from local storage
     const userData = localStorage.getItem('userWithToken')
     const user = JSON.parse(userData).userInfo
+    const userEmail = user.email
     const token = JSON.parse(userData).success
+    console.log(token)
 
     // Create config with token
     const configCommon = {
@@ -28,7 +29,7 @@ const TableUserAllTests = () => {
     const testFetchhandler = async () => {
         try {
             const {data} = await axios.get(
-                `http://localhost:3300/api/tests/`,
+                `http://localhost:3300/api/tests/${userEmail}`,
                 configCommon
             )
             if(data.authEx){
@@ -60,8 +61,8 @@ const TableUserAllTests = () => {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Creation Date</th>
-                                    <th>Creation Time</th>
+                                    <th>Test Date</th>
+                                    <th>Test Time</th>
                                     <th>Time Duration</th>
                                     <th>Marks</th>
                                     <th>Recommendation</th>
@@ -69,22 +70,19 @@ const TableUserAllTests = () => {
                             </thead>
                             <tbody>
                                 {
-                                    tests.map((obj) => {
+                                    tests.map((obj, index) => {
                                         // Destructure
-                                        const {_id, userEmail, currentDate, currentTime, timeDuration, correct, recommendation} = obj
-                                        if(userEmail === user.email){
-                                            num++
-                                            return(
-                                                <tr key={_id}>
-                                                    <td>{num}</td>
-                                                    <td>{currentDate}</td>
-                                                    <td>{currentTime}</td>
-                                                    <td>{formatTime(timeDuration)}</td>
-                                                    <td>{correct}</td>
-                                                    <td>{recommendation}</td>
-                                                </tr>
-                                            )
-                                        }
+                                        const {_id, currentDate, currentTime, timeDuration, correct, recommendation} = obj
+                                        return(
+                                            <tr key={_id}>
+                                                <td>{index+1}</td>
+                                                <td>{currentDate}</td>
+                                                <td>{currentTime}</td>
+                                                <td>{formatTime(timeDuration)}</td>
+                                                <td>{correct}</td>
+                                                <td>{recommendation}</td>
+                                            </tr>
+                                        )
                                     })
                                 }
                             </tbody>

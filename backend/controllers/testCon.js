@@ -31,3 +31,15 @@ exports.addTest = async (req, res) => {
         res.json({errors: {message: Object.entries(err.errors)[0][1].message}})
     }
 }
+
+// Get all test by user email
+exports.getTestsByEmail = async (req, res) => {
+    const { userEmail } = req.params
+
+    try {
+        const tests = await Test.find({userEmail})
+        res.status(200).json(tests)
+    } catch (err) {
+        res.json({ errors: {message: err.message} })
+    }
+}
