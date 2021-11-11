@@ -345,7 +345,7 @@ th{
 /* Question */
 .test .ques{
     font-size: 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 /* Options */
@@ -353,7 +353,7 @@ th{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .test .options .op{

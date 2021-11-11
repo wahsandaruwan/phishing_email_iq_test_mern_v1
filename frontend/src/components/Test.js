@@ -102,7 +102,14 @@ const Test = () => {
         <>
             <section className="test">
                 {step === 1 && <QuizStart onQuizStart={quizStartHandler}/>}
-                {step === 2 && <QuizWithHeading/>}
+                {step === 2 && <QuizWithHeading
+                    data={quizes[activeQuestion]}
+                    onAnswerUpdate={setAnswers}
+                    numOfQuestions={10}
+                    activeQuestion={activeQuestion}
+                    onSetActiveQuestion={setActiveQuestion}
+                    onSetStep={setStep}
+                />}
             </section>
         </>
     )

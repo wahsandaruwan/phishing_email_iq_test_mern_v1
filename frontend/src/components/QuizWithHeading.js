@@ -1,7 +1,7 @@
 // Element Components
 import Question from "./Question"
 
-const QuizWithHeading = () => {
+const QuizWithHeading = ({data, onAnswerUpdate, numOfQuestions, activeQuestion, onSetActiveQuestion, onSetStep}) => {
     return (
         <>
             <h3>Phishing IQ Test</h3>
@@ -10,7 +10,7 @@ const QuizWithHeading = () => {
                 <progress id="prg-bar" value="30" max="100"> 30% </progress>
             </div>
             <p className="ques">Is the image below of a real email or phishing email?</p>
-            <Question/>
+            <Question data={data} onAnswerUpdate={onAnswerUpdate} numOfQuestions={numOfQuestions} activeQuestion={activeQuestion} onSetActiveQuestion={onSetActiveQuestion} onSetStep={onSetStep}/>
         </>
     )
 }
