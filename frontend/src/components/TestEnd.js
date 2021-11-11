@@ -18,8 +18,8 @@ const TestEnd = ({results, data, onReset, timeDuration}) => {
 
     // Token from local storage
     const userData = localStorage.getItem('userWithToken')
+    const user = JSON.parse(userData).userInfo
     const token = JSON.parse(userData).success
-    console.log(token)
 
     // Configurations
     const configPost = {
@@ -51,6 +51,7 @@ const TestEnd = ({results, data, onReset, timeDuration}) => {
             const {data} = await axios.post(
                 'http://localhost:3300/api/tests', 
                 {
+                    userEmail: user.email,
                     currentDate: currentDate(),
                     currentTime: currentTime(),
                     timeDuration,

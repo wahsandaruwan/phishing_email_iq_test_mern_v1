@@ -21,12 +21,11 @@ const TableAllUsers = () => {
     // Token from local storage
     const userData = localStorage.getItem('userWithToken')
     const token = JSON.parse(userData).success
-    console.log(token)
 
     // Create config with token
     const configCommon = {
         headers: { "Authorization": `Bearer ${token}` }
-    };
+    }
 
     // Fetching user handler
     const userFetchhandler = async () => {

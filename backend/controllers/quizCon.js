@@ -19,7 +19,6 @@ exports.getAllQuizes = async (req, res) => {
                     let available = false
                     quizes.map((obj) => {
                         if(file === obj.quizImage){
-                            console.log(file+" | "+obj.quizImage)
                             available = true
                         }
                     })
