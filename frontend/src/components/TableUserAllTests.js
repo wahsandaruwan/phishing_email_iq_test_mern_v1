@@ -8,7 +8,7 @@ const TableUserAllTests = () => {
     const [data] = useState(TblData)
     return (
         <>
-            <section className="all-tests">
+            <section className="all-data">
                 <h3>All Past Tests</h3>
                 {data.length > 0 && (
                     <div className="tbl-div">

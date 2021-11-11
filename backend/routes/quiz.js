@@ -4,7 +4,7 @@ const {getAllQuizes, addQuiz, getQuizById, getQuizBySearch, updateQuiz, deleteQu
 const {authRole} = require('../middlewares/auth')
 
 // Get all quizes router
-router.get('/', authRole(['admin']), getAllQuizes)
+router.get('/', authRole(['admin', 'normal']), getAllQuizes)
 
 // Add quiz router
 router.post('/', authRole(['admin']), addQuiz)

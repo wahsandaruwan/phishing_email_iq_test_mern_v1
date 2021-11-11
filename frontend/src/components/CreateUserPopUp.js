@@ -205,7 +205,7 @@ const CreateUserPopUp = ({refreshUserTable, togglePopUp, selectedUserId}) => {
                         <option value="normal">normal</option>
                     </select>
                     <InputBox inputState={userEmailState} type="text" place="Enter Email..." defaultValue={email}/>
-                    <InputBox inputState={userPasswordState} type="password" place="Enter Password..."/>
+                    <InputBox inputState={userPasswordState} type="password" place={!selectedUserId ? "Enter Password..." : "Enter a new Password or leave it Empty..."}/>
                     <SubmitBtn clickFunc={!selectedUserId ? createUserHandler : updateUserHandler} txt={!selectedUserId ? "Create User" : "Update User"}/>
                     <BiX className="close-icon" onClick={(e) => togglePopUp(e)}/>
                     {myError && 

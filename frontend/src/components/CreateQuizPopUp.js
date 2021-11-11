@@ -185,6 +185,7 @@ const CreateQuizPopUp = ({refreshQuizTable, togglePopUp, selectedQuizId}) => {
                 <form className="popup-form">
                     <h2>{!selectedQuizId ? "Create a New Quiz" : "Edit Quiz"}</h2>
                     <InputBox inputState={titleState} type="text" place="Enter Quiz Title..." defaultValue={title}/>
+                    {selectedQuizId && <p style={{fontSize: "0.8rem", marginBottom: "5px"}}>Select a new Image or leave it Empty...</p>}
                     <input className="file-up" type="file" onChange={(e) => imageState(e.target.files[0])}/>
                     <select id="user-type" className="uq-drop" onChange={(e) => answerState(e.target.value)} value={!selectedQuizId ? null : quizAns}>
                         <option value=""></option>

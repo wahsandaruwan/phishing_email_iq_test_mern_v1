@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/quizes', authUser, quizRoutes)
 
-// User route middleware
+// User routes middleware
 app.use('/api/users', userRoutes)
 
 // Middleware for undefined routes

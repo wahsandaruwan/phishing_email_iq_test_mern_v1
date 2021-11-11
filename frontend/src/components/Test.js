@@ -1,36 +1,108 @@
-// Element Components
-import SubmitBtn from "../components/SubmitBtn"
+// Element Component
+import QuizWithHeading from "./QuizWithHeading"
+import QuizStart from "./QuizStart";
 
+import axios from 'axios'
+import { useState, useEffect } from 'react'
+import { useHistory } from "react-router-dom"
+
+let interval
 const Test = () => {
+    // Question states
+    const [step, setStep] = useState(1)
+    const [activeQuestion, setActiveQuestion] = useState(0)
+    const [answers, setAnswers] =  useState([])
+    const [time, setTime] = useState(0)
+    const [quizes, setQuizes] = useState([])
+
+    // Set history
+    const history = useHistory()
+
+    // Token from local storage
+    const userData = localStorage.getItem('userWithToken')
+    const token = JSON.parse(userData).success
+    console.log(token)
+
+    // Create config with token
+    const configCommon = {
+        headers: { "Authorization": `Bearer ${token}` }
+    };
+
+    // Clear interval
+    useEffect(() => {
+        if(step === 2){
+            clearInterval(interval)
+        }
+    }, [step])
+
+    // Quiz start handler
+    const quizStartHandler = (e) => {
+        e.preventDefault()
+        setStep(2)
+        // Timer
+        interval = setInterval(() => {
+            setTime((prevTime) => prevTime + 1)
+        }, 1000)
+    }
+
+    // Quiz reset handler
+    const resetClickHandler = () => {
+        setStep(2)
+        setActiveQuestion(0)
+        setAnswers([])
+        setTime(0)
+        // Timer
+        interval = setInterval(() => {
+            setTime((prevTime) => prevTime + 1)
+        }, 1000)
+    }
+
+    // Shuffle array
+    const shuffleArray = (arr) => {
+        for(let i = arr.length - 1; i > 0; i--){
+            const j = Math.floor(Math.random() * (i + 1))
+            const temp = arr[i]
+            arr[i] = arr[j]
+            arr[j] = temp
+        }
+
+        return arr
+    }
+
+    // Fetching quizes handler
+    const quizFetchhandler = async () => {
+        try {
+            const {data} = await axios.get(
+                `http://localhost:3300/api/quizes/`,
+                configCommon
+            )
+            if(data.authEx){
+                alert(data.errors.message)
+                // Clear local storage and navigate to login page
+                localStorage.clear()
+                history.push("/")
+            }
+            else{
+                console.log(data)
+                const cloneData = [...data]
+                console.log(shuffleArray(cloneData))
+                setQuizes(cloneData)
+            }
+        } catch (err) {
+            alert(err.message)
+        }
+    }
+
+    // Handle fetching all users
+    useEffect(() => {
+        quizFetchhandler()
+    }, [])
+
     return (
         <>
             <section className="test">
-                <h3>Phishing IQ Test</h3>
-                <div className="prg">
-                    <label for="prg-bar">30%</label>
-                    <progress id="prg-bar" value="30" max="100"> 30% </progress>
-                </div>
-                <p className="ques">Is the image below of a real email or phishing email?</p>
-                <div className="options">
-                    <div className="op">
-                        <input type="radio" name="ans" id="rd1"/>
-                        <label htmlFor="rd1">Real Email</label>
-                    </div>
-                    <div className="op">
-                        <input type="radio" name="ans" id="rd2"/>
-                        <label htmlFor="rd2">No Answer</label>
-                    </div>
-                    <div className="op">
-                        <input type="radio" name="ans" id="rd3"/>
-                        <label htmlFor="rd3">Phishing Email</label>
-                    </div>
-                </div>
-                <div className="nxt-btn">
-                    <SubmitBtn txt="Next"/>
-                </div>
-                <div className="image-box">
-                    <img src="./images/sample.png" alt="" />
-                </div>
+                {step === 1 && <QuizStart onQuizStart={quizStartHandler}/>}
+                {step === 2 && <QuizWithHeading/>}
             </section>
         </>
     )
