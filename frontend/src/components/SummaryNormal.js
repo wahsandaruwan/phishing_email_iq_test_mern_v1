@@ -13,6 +13,8 @@ const SummaryNormal = () => {
     // Tests state
     const [tests, setTests] = useState('')
 
+    const testsLen = tests.length
+
     // Set history
     const history = useHistory()
 
@@ -56,9 +58,9 @@ const SummaryNormal = () => {
     return (
         <>
             <section className="summary">
-                <SumBox title="Last Test Score" value={tests && (tests[tests.length-1]).correct} icon={<BiBookmarks/>}/>
-                <SumBox title="Last Test Time" value={tests && formatTime((tests[tests.length-1]).timeDuration)} icon={<BiTime/>}/>
-                <SumBox title="Number of Test Faced" value={tests && tests.length} icon={<BiBadgeCheck/>}/>
+                <SumBox title="Last Test Score" value={tests && testsLen ? (tests[testsLen-1]).correct : 0} icon={<BiBookmarks/>}/>
+                <SumBox title="Last Test Time" value={tests && testsLen ? formatTime((tests[testsLen-1]).timeDuration) : 0} icon={<BiTime/>}/>
+                <SumBox title="Number of Test Faced" value={tests && testsLen ? testsLen : 0} icon={<BiBadgeCheck/>}/>
             </section>
         </>
     )

@@ -18,6 +18,10 @@ const SummaryAdmin = () => {
     // Quizes state
     const [quizes, setQuizes] = useState('')
 
+    const testsLen = tests.length
+    const usersLen = users.length
+    const quizesLen = quizes.length
+
     // Set history
     const history = useHistory()
 
@@ -103,9 +107,9 @@ const SummaryAdmin = () => {
     return (
         <>
             <section className="summary">
-                <SumBox title="Number of Users" value={users && users.length} icon={<BiUser/>}/>
-                <SumBox title="Number of Tests" value={tests && tests.length} icon={<BiReset/>}/>
-                <SumBox title="Number of Quizes" value={quizes && quizes.length} icon={<BiAbacus/>}/>
+                <SumBox title="Number of Users" value={users && usersLen ? usersLen : 0} icon={<BiUser/>}/>
+                <SumBox title="Number of Tests" value={tests && testsLen ? testsLen : 0} icon={<BiReset/>}/>
+                <SumBox title="Number of Quizes" value={quizes && quizesLen ? quizesLen : 0} icon={<BiAbacus/>}/>
             </section>
         </>
     )

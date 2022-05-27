@@ -18,15 +18,15 @@ exports.userRegistration = async (req, res) => {
     }
 
     // Add hashed password
-    req.body.password = password.length >= 6 ? hashPass : false
+    const newPass = password.length >= 6 ? hashPass : false
 
     // Create a new user
     const newUser = new User({
-        firstName, 
-        lastName, 
-        userType, 
-        email, 
-        password
+        firstName,
+        lastName,
+        userType,
+        email,
+        password: newPass
     })
     console.log(newUser)
     try{
